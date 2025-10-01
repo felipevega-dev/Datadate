@@ -7,184 +7,244 @@ export interface AnimatedExample {
   allData: any[];
 }
 
+export interface DataTable {
+  title?: string;
+  columns: string[];
+  rows: Record<string, any>[];
+}
+
+export interface SQLExample {
+  title?: string;
+  code: string;
+}
+
 export interface Lesson {
   id: number;
   title: string;
   description: string;
-  explanation: string;
+  explanation: string; // Solo texto explicativo, SIN código SQL
+  sqlExamples?: SQLExample[]; // Código SQL separado
   objectives: string[];
   hints: string[];
   initialQuery: string;
   solutionQuery: string;
+  solutions?: string[]; // Soluciones para cada objetivo
   animatedExamples?: AnimatedExample[];
   practiceContext?: string; // Contexto para la práctica
   practiceInstructions?: string; // Instrucciones detalladas
+  dataTables?: DataTable[]; // Tablas de datos para mostrar
 }
 
 export const lessons: Lesson[] = [
   {
-    id: 1,
-    title: "Lección 1: Introducción a SQL y Consultas SELECT",
-    description: "Aprende qué es SQL y cómo seleccionar datos de una tabla",
+    id: 0,
+    title: "Lección 0: Introducción a SQL y Bases de Datos Relacionales",
+    description: "Comprende los fundamentos de las bases de datos relacionales antes de comenzar con SQL",
     explanation: `
-# ¿Qué es SQL?
+## ¿Qué es SQL?
 
-**SQL** (Structured Query Language o Lenguaje de Consulta Estructurado) es un lenguaje de programación diseñado específicamente para comunicarse con bases de datos. A diferencia de otros lenguajes de programación que se usan para crear aplicaciones completas, SQL se especializa en una cosa: **trabajar con datos**.
+SQL, o Structured Query Language (Lenguaje de Consulta Estructurado), es un lenguaje diseñado para permitir que tanto usuarios técnicos como no técnicos puedan consultar, manipular y transformar datos de una base de datos relacional. Debido a su simplicidad, las bases de datos SQL proveen almacenamiento seguro y escalable para millones de sitios web y aplicaciones móviles.
 
-## ¿Por qué aprender SQL?
+### Dato importante
 
-SQL es una de las habilidades técnicas más demandadas en el mercado laboral. Aquí te decimos por qué:
+Existen muchas bases de datos SQL populares incluyendo SQLite, MySQL, PostgreSQL, Oracle y Microsoft SQL Server. Todas ellas soportan el estándar común del lenguaje SQL, que es lo que este sitio enseñará, pero cada implementación puede diferir en las características adicionales y tipos de almacenamiento que soporta.
 
-- **Universal**: Funciona en MySQL, PostgreSQL, SQLite, Oracle, SQL Server y más
-- **Esencial**: Prácticamente todas las aplicaciones modernas usan bases de datos
-- **Bien pagado**: Los profesionales que manejan datos están entre los mejor remunerados
-- **Accesible**: Es más fácil de aprender que muchos lenguajes de programación tradicionales
-- **Poderoso**: Puedes analizar millones de registros con unas pocas líneas de código
+## Bases de datos relacionales
 
-## ¿Qué es una base de datos relacional?
+Antes de aprender la sintaxis SQL, es importante tener un modelo de qué es realmente una base de datos relacional. Una base de datos relacional representa una colección de tablas relacionadas (bidimensionales). Cada una de estas tablas es similar a una hoja de cálculo de Excel, con un número fijo de columnas nombradas (los atributos o propiedades de la tabla) y cualquier número de filas de datos.
 
-Imagina una base de datos como un **conjunto de hojas de cálculo** (como Excel) conectadas entre sí. Cada hoja de cálculo se llama **tabla** y contiene:
+Por ejemplo, si el Departamento de Vehículos Motorizados tuviera una base de datos, podrías encontrar una tabla conteniendo todos los vehículos conocidos que las personas en el estado están conduciendo. Esta tabla podría necesitar almacenar el modelo, tipo, número de ruedas y número de puertas de cada vehículo, por ejemplo.
 
-- **Columnas**: Las propiedades o atributos (como "nombre", "edad", "email")
-- **Filas**: Los registros individuales (cada persona, producto, película, etc.)
+En una base de datos como esta, podrías encontrar tablas relacionadas adicionales conteniendo información como una lista de todos los conductores registrados en el estado, los tipos de licencias de conducir que se pueden otorgar, o incluso infracciones de tránsito para cada conductor.
 
-Por ejemplo, la tabla \`movies\` se vería así:
+Al aprender SQL, el objetivo es aprender cómo responder preguntas específicas sobre estos datos, como "¿Qué tipos de vehículos en la carretera tienen menos de cuatro ruedas?", o "¿Cuántos modelos de autos produce Tesla?", para ayudarnos a tomar mejores decisiones.
 
-<div style="overflow: hidden; border-radius: 8px; border: 2px solid #BFDBFE; margin: 24px 0;">
-  <table style="width: 100%; border-collapse: collapse;">
-    <thead style="background: #DBEAFE; border-bottom: 2px solid #BFDBFE;">
-      <tr>
-        <th style="padding: 12px 16px; text-align: left; font-weight: bold; color: #1E3A8A; font-size: 12px; text-transform: uppercase;">ID</th>
-        <th style="padding: 12px 16px; text-align: left; font-weight: bold; color: #1E3A8A; font-size: 12px; text-transform: uppercase;">Title</th>
-        <th style="padding: 12px 16px; text-align: left; font-weight: bold; color: #1E3A8A; font-size: 12px; text-transform: uppercase;">Director</th>
-        <th style="padding: 12px 16px; text-align: left; font-weight: bold; color: #1E3A8A; font-size: 12px; text-transform: uppercase;">Year</th>
-        <th style="padding: 12px 16px; text-align: left; font-weight: bold; color: #1E3A8A; font-size: 12px; text-transform: uppercase;">Rating</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr style="background: white; border-bottom: 1px solid #E5E7EB;">
-        <td style="padding: 12px 16px; color: #1F2937; font-size: 14px;">1</td>
-        <td style="padding: 12px 16px; color: #1F2937; font-size: 14px;">Toy Story</td>
-        <td style="padding: 12px 16px; color: #1F2937; font-size: 14px;">John Lasseter</td>
-        <td style="padding: 12px 16px; color: #1F2937; font-size: 14px;">1995</td>
-        <td style="padding: 12px 16px; color: #1F2937; font-size: 14px;">8.3</td>
-      </tr>
-      <tr style="background: #F9FAFB; border-bottom: 1px solid #E5E7EB;">
-        <td style="padding: 12px 16px; color: #1F2937; font-size: 14px;">2</td>
-        <td style="padding: 12px 16px; color: #1F2937; font-size: 14px;">Finding Nemo</td>
-        <td style="padding: 12px 16px; color: #1F2937; font-size: 14px;">Andrew Stanton</td>
-        <td style="padding: 12px 16px; color: #1F2937; font-size: 14px;">2003</td>
-        <td style="padding: 12px 16px; color: #1F2937; font-size: 14px;">8.2</td>
-      </tr>
-      <tr style="background: white;">
-        <td style="padding: 12px 16px; color: #1F2937; font-size: 14px;">3</td>
-        <td style="padding: 12px 16px; color: #1F2937; font-size: 14px;">Cars</td>
-        <td style="padding: 12px 16px; color: #1F2937; font-size: 14px;">John Lasseter</td>
-        <td style="padding: 12px 16px; color: #1F2937; font-size: 14px;">2006</td>
-        <td style="padding: 12px 16px; color: #1F2937; font-size: 14px;">7.2</td>
-      </tr>
-    </tbody>
-  </table>
-</div>
+## Visualizando la estructura de una base de datos
 
-Cada **fila** es una película diferente, y cada **columna** contiene un tipo específico de información sobre esa película.
+Para entender mejor cómo se organizan las bases de datos, las tablas y las columnas, usa la visualización interactiva a continuación. Puedes explorar tres ejemplos de bases de datos del mundo real:
 
-## La instrucción SELECT: Tu primera consulta
+- **Tienda Online**: Una base de datos para un e-commerce con usuarios, productos y pedidos
+- **Red Social**: Una plataforma social con usuarios, publicaciones y comentarios
+- **Biblioteca**: Un sistema de gestión de préstamos con libros, préstamos y autores
 
-**SELECT** es el comando más importante de SQL. Te permite **leer** o **consultar** datos de una tabla. Es como decirle a la base de datos: "Muéstrame estos datos".
+Haz clic en cada base de datos para ver sus tablas, y en cada tabla para ver sus columnas con tipos de datos y descripciones.
 
-### Sintaxis básica
+## Acerca de las lecciones
 
-\`\`\`sql
-SELECT columna1, columna2, columna3
-FROM nombre_tabla;
-\`\`\`
+Dado que la mayoría de los usuarios aprenderán SQL para interactuar con una base de datos existente, las lecciones comienzan introduciéndote a las diversas partes de una consulta SQL. Las lecciones posteriores te mostrarán cómo alterar una tabla (o esquema) y crear nuevas tablas desde cero.
 
-Cada parte significa:
-- **SELECT**: El comando que inicia la consulta
-- **columna1, columna2**: Las columnas específicas que quieres ver
-- **FROM**: Indica de qué tabla vienen los datos
-- **nombre_tabla**: El nombre de la tabla que contiene los datos
+Cada lección introducirá un concepto diferente y terminará con un ejercicio interactivo. Ve a tu propio ritmo y no tengas miedo de dedicar tiempo experimentando con los ejercicios antes de continuar. Si ya estás familiarizado con SQL, puedes saltar adelante usando los enlaces de navegación, pero te recomendaríamos trabajar en las lecciones de todos modos.
 
-### Seleccionar todas las columnas con *
-
-Cuando quieres ver **todas** las columnas de una tabla, usar el asterisco (\`*\`) es un atajo:
-
-\`\`\`sql
-SELECT * FROM movies;
-\`\`\`
-
-Esto devolverá todas las columnas (id, title, director, year, length_minutes, rating) de todas las películas.
-
-### Seleccionar columnas específicas
-
-Si solo necesitas ciertas columnas, especifícalas por nombre:
-
-\`\`\`sql
-SELECT title, director FROM movies;
-\`\`\`
-
-Esto solo devuelve el título y director de cada película, ignorando las demás columnas.
-
-## ¿Por qué especificar columnas?
-
-En la vida real, las tablas pueden tener decenas o cientos de columnas. Seleccionar solo lo que necesitas:
-- **Mejora el rendimiento** (menos datos que transferir)
-- **Hace el código más claro** (es obvio qué datos estás usando)
-- **Ahorra ancho de banda** (importante en aplicaciones web)
-
-## Tu primera consulta
-
-En el ejercicio a continuación, trabajarás con una tabla llamada \`movies\` que contiene información sobre películas de Pixar. Tu objetivo es seleccionar todas las columnas de esta tabla.
-
-**Pista**: Recuerda que \`*\` significa "todas las columnas" y no olvides incluir el punto y coma (\`;\`) al final.
+Al final, esperamos que tengas una base sólida para usar SQL en tus propios proyectos y más allá.
     `,
     objectives: [
-      "Selecciona todas las columnas de la tabla movies",
+      "Lee todo el contenido de esta lección",
+    ],
+    hints: [
+      "Esta lección es solo lectura, no requiere escribir código",
+      "Tómate tu tiempo para entender cada concepto",
+      "Estos fundamentos te ayudarán en todas las lecciones siguientes",
+    ],
+    initialQuery: "-- Esta lección es solo teoría. ¡Prepárate para la siguiente!\nSELECT 'Estoy listo' as mensaje;",
+    solutionQuery: "SELECT 'Estoy listo' as mensaje;",
+    practiceContext: `
+## Lección introductoria
+
+Esta es una lección de **conceptos fundamentales**. No necesitas escribir código todavía. Asegúrate de entender:
+
+- Qué es una base de datos relacional
+- Cómo se organizan los datos en tablas
+- La estructura de filas y columnas
+- Por qué SQL es importante
+
+Si algo no quedó claro, relee la sección correspondiente. Estos conceptos son la base para todo lo que viene.
+    `,
+    practiceInstructions: `
+## Instrucciones
+
+Esta lección no requiere ejercicios prácticos. Simplemente:
+
+1. Lee con atención todos los conceptos
+2. Observa el ejemplo de la tabla de vehículos
+3. Comprende la estructura relacional de los datos
+4. Cuando estés listo, continúa con la **Lección 1** donde escribirás tu primera consulta SQL
+
+**Opcional**: Puedes ejecutar la consulta de ejemplo en el editor para familiarizarte con la interfaz.
+    `,
+    animatedExamples: [
+      {
+        allData: [
+          { mensaje: "Estoy listo" },
+        ],
+        steps: [
+          {
+            code: "SELECT",
+            delay: 800,
+            results: [],
+          },
+          {
+            code: "SELECT 'Estoy listo'",
+            delay: 800,
+            results: [],
+          },
+          {
+            code: "SELECT 'Estoy listo' as mensaje;",
+            delay: 2000,
+            results: [
+              { mensaje: "Estoy listo" },
+            ],
+          },
+        ],
+      },
+    ],
+    dataTables: [
+      {
+        title: "Tabla: Vehículos",
+        columns: ["Id", "Marca/Modelo", "# Ruedas", "# Puertas", "Tipo"],
+        rows: [
+          { "Id": 1, "Marca/Modelo": "Ford Focus", "# Ruedas": 4, "# Puertas": 4, "Tipo": "Sedán" },
+          { "Id": 2, "Marca/Modelo": "Tesla Roadster", "# Ruedas": 4, "# Puertas": 2, "Tipo": "Deportivo" },
+          { "Id": 3, "Marca/Modelo": "Kawasaki Ninja", "# Ruedas": 2, "# Puertas": 0, "Tipo": "Motocicleta" },
+          { "Id": 4, "Marca/Modelo": "McLaren Formula 1", "# Ruedas": 4, "# Puertas": 0, "Tipo": "Carrera" },
+          { "Id": 5, "Marca/Modelo": "Tesla S", "# Ruedas": 4, "# Puertas": 4, "Tipo": "Sedán" },
+        ],
+      },
+    ],
+  },
+  {
+    id: 1,
+    title: "Lección 1: Consultas SELECT 101",
+    description: "Aprende a recuperar datos de una base de datos SQL",
+    explanation: `
+## Recuperando datos con SELECT
+
+Para recuperar datos de una base de datos SQL, necesitamos escribir declaraciones **SELECT**, que coloquialmente se conocen como consultas. Una consulta en sí misma es solo una declaración que define qué datos estamos buscando, dónde encontrarlos en la base de datos y, opcionalmente, cómo transformarlos antes de que sean devueltos.
+
+Puedes pensar en una tabla en SQL como un tipo de entidad (por ejemplo, Series), y cada fila en esa tabla como una instancia específica de ese tipo (por ejemplo, Stranger Things, Breaking Bad, etc.). Esto significa que las columnas representarían las propiedades comunes compartidas por todas las instancias de esa entidad (por ejemplo, titulo, genero, temporadas, etc.).
+
+Dada una tabla de datos, la consulta más básica que podríamos escribir sería una que seleccione un par de columnas (propiedades) de la tabla con todas las filas (instancias).
+
+### Consulta SELECT para columnas específicas
+
+El resultado de esta consulta será un conjunto bidimensional de filas y columnas, efectivamente una copia de la tabla, pero solo con las columnas que solicitamos.
+
+### Consulta SELECT para todas las columnas
+
+Si queremos recuperar absolutamente todas las columnas de datos de una tabla, podemos usar el atajo del asterisco (\`*\`) en lugar de listar todos los nombres de columnas individualmente. Esta consulta es realmente útil porque es una forma simple de inspeccionar una tabla volcando todos los datos de una vez.
+
+## Ejercicio
+
+Estaremos usando una base de datos con información sobre series de Netflix para este ejercicio. Esta primera práctica solo involucrará la tabla Series, y la consulta predeterminada a continuación actualmente no muestra nada. Para continuar a la siguiente lección, modifica la consulta para encontrar la información exacta que necesitamos para cada tarea.
+    `,
+    sqlExamples: [
+      {
+        title: "Consulta SELECT para columnas específicas",
+        code: "SELECT columna, otra_columna, …\nFROM mi_tabla;"
+      },
+      {
+        title: "Consulta SELECT para todas las columnas",
+        code: "SELECT * \nFROM mi_tabla;"
+      }
+    ],
+    objectives: [
+      "Encuentra el titulo de cada serie",
+      "Encuentra el genero de cada serie",
+      "Encuentra el titulo y genero de cada serie",
+      "Encuentra el titulo y año de estreno de cada serie",
+      "Encuentra toda la información de cada serie",
     ],
     hints: [
       "Usa el asterisco (*) para seleccionar todas las columnas",
-      "La sintaxis es: SELECT * FROM nombre_tabla;",
+      "Para una sola columna: SELECT columna FROM tabla;",
+      "Para múltiples columnas sepáralas con comas",
+      "Recuerda usar FROM series para especificar la tabla",
       "No olvides el punto y coma al final",
     ],
-    initialQuery: "SELECT ",
-    solutionQuery: "SELECT * FROM movies;",
+    initialQuery: "-- Escribe tu consulta SELECT aquí\n",
+    solutionQuery: "SELECT * FROM series;",
+    solutions: [
+      "SELECT titulo FROM series;",
+      "SELECT genero FROM series;",
+      "SELECT titulo, genero FROM series;",
+      "SELECT titulo, año_estreno FROM series;",
+      "SELECT * FROM series;",
+    ],
     practiceContext: `
 ## 🎬 Escenario del mundo real
 
-Imagina que trabajas para una plataforma de streaming como Netflix o Disney+. Tu jefe necesita un reporte rápido de todas las películas que tienen en el catálogo. 
+Imagina que trabajas en el equipo de análisis de contenido de Netflix. Tu jefe necesita un reporte rápido de todas las series que tienen en el catálogo. 
 
-Tu tarea es **consultar la base de datos** para obtener toda la información disponible de cada película. En el mundo real, esto te ayudaría a:
+Tu tarea es **consultar la base de datos** para obtener toda la información disponible de cada serie. En el mundo real, esto te ayudaría a:
 
-- Hacer un inventario completo del catálogo
+- Hacer un inventario completo del catálogo de series
 - Verificar qué información tienen registrada
-- Preparar datos para un reporte gerencial
-- Auditar la base de datos
+- Preparar datos para reportes de contenido
+- Analizar tendencias de géneros y calificaciones
 
-En empresas reales, estas consultas básicas se hacen **cientos de veces al día** por analistas, desarrolladores y equipos de negocio.
+En plataformas de streaming, estas consultas básicas se hacen **cientos de veces al día** por analistas de datos, equipos de contenido y desarrolladores.
     `,
     practiceInstructions: `
 ## 📝 ¿Qué debes hacer?
 
-Tu objetivo es escribir una consulta SQL que traiga **toda la información** de todas las películas de la tabla \`movies\`.
+Tu objetivo es escribir consultas SQL para obtener diferentes datos de la tabla \`series\`.
 
 **Pasos a seguir:**
 
 1. Comienza con la palabra clave \`SELECT\`
-2. Usa el asterisco \`*\` para indicar "todas las columnas"
-3. Agrega \`FROM movies\` para especificar la tabla
+2. Especifica las columnas que necesitas (o usa \`*\` para todas)
+3. Agrega \`FROM series\` para especificar la tabla
 4. Termina con punto y coma \`;\`
 
-**Resultado esperado:** Deberías ver todas las películas con sus columnas: id, title, director, year, length_minutes y rating.
+**Resultado esperado:** Deberías ver todas las series con las columnas solicitadas: id, titulo, genero, temporadas, año_estreno, calificacion.
 
 💡 **Tip profesional:** El asterisco (\`*\`) es útil para exploración inicial, pero en producción es mejor especificar las columnas exactas que necesitas.
     `,
     animatedExamples: [
       {
         allData: [
-          { id: 1, title: "Toy Story", director: "John Lasseter", year: 1995 },
-          { id: 2, title: "Finding Nemo", director: "Andrew Stanton", year: 2003 },
-          { id: 3, title: "Cars", director: "John Lasseter", year: 2006 },
+          { id: 1, titulo: "Stranger Things", genero: "Ciencia Ficción", temporadas: 4, calificacion: 8.7 },
+          { id: 2, titulo: "Breaking Bad", genero: "Drama", temporadas: 5, calificacion: 9.5 },
+          { id: 3, titulo: "The Crown", genero: "Drama Histórico", temporadas: 6, calificacion: 8.6 },
         ],
         steps: [
           {
@@ -203,21 +263,21 @@ Tu objetivo es escribir una consulta SQL que traiga **toda la información** de 
             results: [],
           },
           {
-            code: "SELECT *\nFROM movies;",
+            code: "SELECT *\nFROM series;",
             delay: 2000,
             results: [
-              { id: 1, title: "Toy Story", director: "John Lasseter", year: 1995 },
-              { id: 2, title: "Finding Nemo", director: "Andrew Stanton", year: 2003 },
-              { id: 3, title: "Cars", director: "John Lasseter", year: 2006 },
+              { id: 1, titulo: "Stranger Things", genero: "Ciencia Ficción", temporadas: 4, calificacion: 8.7 },
+              { id: 2, titulo: "Breaking Bad", genero: "Drama", temporadas: 5, calificacion: 9.5 },
+              { id: 3, titulo: "The Crown", genero: "Drama Histórico", temporadas: 6, calificacion: 8.6 },
             ],
           },
         ],
       },
       {
         allData: [
-          { title: "Toy Story", year: 1995 },
-          { title: "Finding Nemo", year: 2003 },
-          { title: "Cars", year: 2006 },
+          { titulo: "Stranger Things", genero: "Ciencia Ficción" },
+          { titulo: "Breaking Bad", genero: "Drama" },
+          { titulo: "The Crown", genero: "Drama Histórico" },
         ],
         steps: [
           {
@@ -226,22 +286,22 @@ Tu objetivo es escribir una consulta SQL que traiga **toda la información** de 
             results: [],
           },
           {
-            code: "SELECT title",
+            code: "SELECT titulo",
             delay: 800,
             results: [],
           },
           {
-            code: "SELECT title, year",
+            code: "SELECT titulo, genero",
             delay: 800,
             results: [],
           },
           {
-            code: "SELECT title, year\nFROM movies;",
+            code: "SELECT titulo, genero\nFROM series;",
             delay: 2000,
             results: [
-              { title: "Toy Story", year: 1995 },
-              { title: "Finding Nemo", year: 2003 },
-              { title: "Cars", year: 2006 },
+              { titulo: "Stranger Things", genero: "Ciencia Ficción" },
+              { titulo: "Breaking Bad", genero: "Drama" },
+              { titulo: "The Crown", genero: "Drama Histórico" },
             ],
           },
         ],
@@ -250,104 +310,130 @@ Tu objetivo es escribir una consulta SQL que traiga **toda la información** de 
   },
   {
     id: 2,
-    title: "Lección 2: Consultas con columnas específicas",
-    description: "Selecciona solo las columnas que necesitas",
+    title: "Lección 2: Consultas con restricciones (Parte 1)",
+    description: "Filtra resultados usando la cláusula WHERE",
     explanation: `
-# Seleccionando columnas específicas
+## Filtrando resultados con WHERE
 
-En lugar de traer todas las columnas con \`*\`, puedes especificar exactamente cuáles quieres:
+Ahora sabemos cómo seleccionar columnas específicas de una tabla, pero si tuvieras una tabla con cien millones de filas, leer todas las filas sería ineficiente e incluso imposible.
 
-\`\`\`sql
-SELECT columna1, columna2
-FROM nombre_tabla;
-\`\`\`
+Para filtrar ciertos resultados y que no sean devueltos, necesitamos usar una cláusula **WHERE** en la consulta. La cláusula se aplica a cada fila de datos verificando valores de columnas específicas para determinar si deben incluirse en los resultados o no.
 
-Esto es más eficiente y te da control sobre los datos que recibes.
+Cláusulas más complejas pueden construirse uniendo numerosas palabras clave lógicas **AND** u **OR**. A continuación, algunos operadores útiles que puedes usar para datos numéricos:
 
-## Ejemplo:
-\`\`\`sql
-SELECT title, director
-FROM movies;
-\`\`\`
+### Operadores numéricos
 
-Esto devuelve solo el título y director de cada película.
+- **=, !=, <, <=, >, >=**: Operadores numéricos estándar
+- **BETWEEN ... AND ...**: El número está dentro de un rango de dos valores (inclusivo)
+- **NOT BETWEEN ... AND ...**: El número NO está dentro de un rango
+- **IN (...)**: El número existe en una lista
+- **NOT IN (...)**: El número NO existe en una lista
+
+Además de hacer los resultados más manejables, escribir cláusulas para restringir el conjunto de filas devueltas también permite que la consulta se ejecute más rápido debido a la reducción de datos innecesarios.
     `,
+    sqlExamples: [
+      {
+        title: "Consulta SELECT con restricciones",
+        code: "SELECT columna, otra_columna, …\nFROM mi_tabla\nWHERE condicion\n    AND/OR otra_condicion\n    AND/OR …;"
+      },
+      {
+        title: "Ejemplo con rango numérico",
+        code: "SELECT * FROM series\nWHERE año_estreno BETWEEN 2015 AND 2020;"
+      },
+      {
+        title: "Ejemplo con lista",
+        code: "SELECT * FROM series\nWHERE temporadas IN (3, 4, 5);"
+      }
+    ],
     objectives: [
-      "Selecciona solo el title de cada película",
-      "Selecciona el title y director de cada película",
+      "Encuentra la serie con id 6",
+      "Encuentra las series lanzadas entre 2015 y 2020",
+      "Encuentra las series NO lanzadas entre 2015 y 2020",
+      "Encuentra las primeras 5 series con sus años de estreno",
     ],
     hints: [
-      "Usa SELECT title FROM movies;",
-      "Para múltiples columnas: SELECT columna1, columna2 FROM tabla;",
+      "Usa WHERE id = 6 para filtrar por id específico",
+      "BETWEEN te permite especificar un rango de valores",
+      "NOT BETWEEN invierte la condición del rango",
+      "LIMIT al final de la query limita el número de resultados",
     ],
-    initialQuery: "SELECT ",
-    solutionQuery: "SELECT title, director FROM movies;",
+    initialQuery: "SELECT * FROM series WHERE ",
+    solutionQuery: "SELECT * FROM series WHERE id = 6;",
+    solutions: [
+      "SELECT * FROM series WHERE id = 6;",
+      "SELECT * FROM series WHERE año_estreno BETWEEN 2015 AND 2020;",
+      "SELECT * FROM series WHERE año_estreno NOT BETWEEN 2015 AND 2020;",
+      "SELECT titulo, año_estreno FROM series LIMIT 5;",
+    ],
     practiceContext: `
-## 📊 Escenario del mundo real
+## 🎬 Escenario del mundo real
 
-Eres analista de datos en una empresa de medios. El equipo de marketing está preparando una campaña y solo necesita **los títulos** de las películas para un reporte ejecutivo rápido.
+El equipo de análisis de Netflix necesita información específica del catálogo. En lugar de traer **TODOS** los datos de las series, necesitan consultas precisas:
 
-Luego, el departamento de contenidos te pide **títulos y directores** para analizar qué directores tienen más películas en el catálogo.
+- El equipo de desarrollo web quiere actualizar una serie específica por su ID
+- El departamento de estadísticas quiere analizar tendencias de series lanzadas en ciertos períodos
+- Marketing quiere saber qué series son más recientes para campañas promocionales
 
-En el día a día profesional, **no siempre necesitas todas las columnas**. Traer solo lo necesario:
-- Hace las consultas más rápidas
-- Reduce el uso de ancho de banda
-- Hace tu código más claro y mantenible
+Usar **WHERE** es fundamental en producción. Sin filtros, estarías trayendo millones de filas innecesarias, lo que ralentizaría tu aplicación y consumiría recursos del servidor.
     `,
     practiceInstructions: `
 ## 📝 ¿Qué debes hacer?
 
-Completa dos objetivos en esta lección:
+Usa la cláusula WHERE para filtrar resultados según diferentes condiciones:
 
-**Objetivo 1:** Consulta solo el \`title\` de cada película
-- Reemplaza el \`*\` por el nombre de la columna específica: \`title\`
+**Objetivo 1:** Encuentra la serie con \`id = 6\`
+- Usa: \`WHERE id = 6\`
 
-**Objetivo 2:** Consulta el \`title\` y \`director\` de cada película
-- Separa las columnas con comas: \`SELECT title, director\`
+**Objetivo 2:** Series lanzadas entre 2015 y 2020
+- Usa: \`WHERE año_estreno BETWEEN 2015 AND 2020\`
 
-**Resultado esperado:** Tu tabla mostrará solo las columnas que solicitaste, no todas.
+**Objetivo 3:** Series NO lanzadas entre 2015 y 2020
+- Usa: \`WHERE año_estreno NOT BETWEEN 2015 AND 2020\`
 
-💡 **Tip profesional:** En aplicaciones web, cada columna extra que traes de la base de datos consume más memoria y tiempo de respuesta. ¡Sé específico!
+**Objetivo 4:** Primeras 5 series con título y año
+- Usa: \`SELECT titulo, año_estreno FROM series LIMIT 5\`
+
+💡 **Tip profesional:** WHERE es la cláusula más usada en SQL de producción. El 90% de tus queries la incluirán.
     `,
     animatedExamples: [
       {
         allData: [
-          { title: "Toy Story", director: "John Lasseter" },
-          { title: "Finding Nemo", director: "Andrew Stanton" },
-          { title: "Cars", director: "John Lasseter" },
+          { id: 6, titulo: "Narcos", genero: "Crimen", año_estreno: 2015 },
         ],
         steps: [
           {
-            code: "SELECT title",
-            delay: 1000,
+            code: "SELECT * FROM series",
+            delay: 800,
             results: [],
           },
           {
-            code: "SELECT title\nFROM movies;",
+            code: "SELECT * FROM series\nWHERE",
+            delay: 800,
+            results: [],
+          },
+          {
+            code: "SELECT * FROM series\nWHERE id = 6;",
             delay: 2000,
             results: [
-              { title: "Toy Story" },
-              { title: "Finding Nemo" },
-              { title: "Cars" },
+              { id: 6, titulo: "Narcos", genero: "Crimen", año_estreno: 2015 },
             ],
           },
         ],
       },
       {
-        allData: [],
+        allData: [
+          { titulo: "Narcos", año_estreno: 2015 },
+          { titulo: "The Crown", año_estreno: 2016 },
+          { titulo: "Stranger Things", año_estreno: 2016 },
+        ],
         steps: [
           {
-            code: "SELECT title, director",
-            delay: 1000,
-            results: [],
-          },
-          {
-            code: "SELECT title, director\nFROM movies;",
+            code: "SELECT * FROM series\nWHERE año_estreno BETWEEN 2015 AND 2020;",
             delay: 2000,
             results: [
-              { title: "Toy Story", director: "John Lasseter" },
-              { title: "Finding Nemo", director: "Andrew Stanton" },
-              { title: "Cars", director: "John Lasseter" },
+              { titulo: "Narcos", año_estreno: 2015 },
+              { titulo: "The Crown", año_estreno: 2016 },
+              { titulo: "Stranger Things", año_estreno: 2016 },
             ],
           },
         ],
@@ -361,13 +447,7 @@ Completa dos objetivos en esta lección:
     explanation: `
 # Filtrando datos con WHERE
 
-La cláusula **WHERE** te permite filtrar resultados según condiciones:
-
-\`\`\`sql
-SELECT columnas
-FROM tabla
-WHERE condicion;
-\`\`\`
+La cláusula **WHERE** te permite filtrar resultados según condiciones.
 
 ## Operadores comunes:
 - \`=\` → Igual
@@ -380,25 +460,35 @@ WHERE condicion;
 Puedes combinar múltiples condiciones:
 
 **AND** → Ambas condiciones deben cumplirse
-\`\`\`sql
-SELECT * FROM movies 
-WHERE director = "John Lasseter" AND year >= 2000;
-\`\`\`
 
 **OR** → Al menos una condición debe cumplirse
-\`\`\`sql
-SELECT * FROM movies 
-WHERE director = "John Lasseter" OR director = "Pete Docter";
-\`\`\`
-
-## Ejemplos:
-\`\`\`sql
-SELECT * FROM movies WHERE year = 2003;
-SELECT * FROM movies WHERE director = "John Lasseter";
-SELECT * FROM movies WHERE year >= 2000;
-SELECT * FROM movies WHERE year >= 2000 AND rating > 8.0;
-\`\`\`
     `,
+    sqlExamples: [
+      {
+        title: "Sintaxis básica",
+        code: "SELECT columnas\nFROM tabla\nWHERE condicion;"
+      },
+      {
+        title: "Filtrar por año",
+        code: "SELECT * FROM movies WHERE year = 2003;"
+      },
+      {
+        title: "Filtrar por director",
+        code: "SELECT * FROM movies WHERE director = 'John Lasseter';"
+      },
+      {
+        title: "Comparación numérica",
+        code: "SELECT * FROM movies WHERE year >= 2000;"
+      },
+      {
+        title: "Combinando con AND",
+        code: "SELECT * FROM movies \nWHERE director = 'John Lasseter' AND year >= 2000;"
+      },
+      {
+        title: "Combinando con OR",
+        code: "SELECT * FROM movies \nWHERE director = 'John Lasseter' OR director = 'Pete Docter';"
+      }
+    ],
     objectives: [
       "Encuentra todas las películas dirigidas por John Lasseter",
       "Encuentra todas las películas lanzadas en el año 2003 o después",
@@ -499,28 +589,31 @@ En el mundo real, prácticamente **todas las consultas llevan WHERE**. Sin filtr
     explanation: `
 # Ordenando resultados con ORDER BY
 
-Para ordenar los resultados, usa **ORDER BY**:
-
-\`\`\`sql
-SELECT columnas
-FROM tabla
-ORDER BY columna ASC/DESC;
-\`\`\`
+Para ordenar los resultados, usa **ORDER BY**.
 
 - **ASC** → Ascendente (por defecto)
 - **DESC** → Descendente
 
-## Ejemplos:
-\`\`\`sql
-SELECT * FROM movies ORDER BY year DESC;
-SELECT title FROM movies ORDER BY title ASC;
-\`\`\`
-
-Puedes ordenar por múltiples columnas:
-\`\`\`sql
-SELECT * FROM movies ORDER BY director, year DESC;
-\`\`\`
+Puedes ordenar por múltiples columnas separándolas con comas.
     `,
+    sqlExamples: [
+      {
+        title: "Sintaxis básica",
+        code: "SELECT columnas\nFROM tabla\nORDER BY columna ASC/DESC;"
+      },
+      {
+        title: "Ordenar por año descendente",
+        code: "SELECT * FROM movies ORDER BY year DESC;"
+      },
+      {
+        title: "Ordenar alfabéticamente",
+        code: "SELECT title FROM movies ORDER BY title ASC;"
+      },
+      {
+        title: "Ordenar por múltiples columnas",
+        code: "SELECT * FROM movies ORDER BY director, year DESC;"
+      }
+    ],
     objectives: [
       "Lista todas las películas ordenadas por año de lanzamiento (más recientes primero)",
       "Lista los títulos de las películas ordenados alfabéticamente",
@@ -539,24 +632,24 @@ SELECT * FROM movies ORDER BY director, year DESC;
     explanation: `
 # Limitando resultados con LIMIT
 
-**LIMIT** restringe el número de filas devueltas:
+**LIMIT** restringe el número de filas devueltas. Es útil para obtener los "top N" resultados o paginar datos.
 
-\`\`\`sql
-SELECT columnas
-FROM tabla
-LIMIT numero;
-\`\`\`
-
-Útil para obtener los "top N" resultados o paginar datos.
-
-## Ejemplos:
-\`\`\`sql
-SELECT * FROM movies LIMIT 5;
-SELECT * FROM movies ORDER BY rating DESC LIMIT 3;
-\`\`\`
-
-El segundo ejemplo obtiene las 3 películas mejor calificadas.
+Combina LIMIT con ORDER BY para obtener los mejores o peores resultados según un criterio.
     `,
+    sqlExamples: [
+      {
+        title: "Sintaxis básica",
+        code: "SELECT columnas\nFROM tabla\nLIMIT numero;"
+      },
+      {
+        title: "Primeros 5 registros",
+        code: "SELECT * FROM movies LIMIT 5;"
+      },
+      {
+        title: "Top 3 mejor calificadas",
+        code: "SELECT * FROM movies ORDER BY rating DESC LIMIT 3;"
+      }
+    ],
     objectives: [
       "Obtén las primeras 5 películas de la tabla",
       "Obtén las 3 películas con mayor rating",

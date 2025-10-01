@@ -1,0 +1,495 @@
+# CodeAcademy Español - Plataforma de Aprendizaje Interactivo
+
+## 📋 Descripción del Proyecto
+
+Plataforma de aprendizaje interactivo 100% en español para enseñar SQL, Python, JavaScript, CSS y más lenguajes de programación. Inspirada en SQLBolt, con enfoque en ejercicios prácticos, retroalimentación en tiempo real y gamificación.
+
+**Objetivo**: Democratizar el acceso a la educación en programación en español mediante ejercicios interactivos del mundo real.
+
+---
+
+## 🛠️ Stack Tecnológico
+
+### Frontend
+- **Next.js 15.4.1** (App Router)
+- **React 19** 
+- **TypeScript 5.5.3**
+- **TailwindCSS 3.4.5** (estilos)
+- **ShadCN UI** (componentes)
+- **Monaco Editor** (editor de código tipo VS Code)
+- **React Markdown** (renderizado de contenido educativo)
+
+### Backend
+- **Next.js API Routes** (serverless)
+- **SQLite (sqlite3)** en memoria para ejercicios
+- **better-sqlite3** alternativo (modular)
+
+### Herramientas
+- **Lucide React** (iconos)
+- **Autoprefixer** + **PostCSS** (CSS)
+
+---
+
+## 📂 Estructura del Proyecto
+
+```
+D:\Proyectos\SQL/
+├── app/
+│   ├── api/
+│   │   └── execute-sql/route.ts      # API para ejecutar queries SQL
+│   ├── lesson/[id]/page.tsx          # Página dinámica de lecciones
+│   ├── layout.tsx                    # Layout principal con fuentes
+│   ├── page.tsx                      # Página de inicio (landing)
+│   └── globals.css                   # Estilos globales + animaciones
+├── components/
+│   ├── ui/                           # Componentes ShadCN UI
+│   │   ├── button.tsx
+│   │   ├── card.tsx
+│   │   ├── progress.tsx
+│   │   └── ...
+│   ├── sql-editor.tsx                # Editor SQL con validación, resultados y soluciones
+│   ├── sql-hint-helper.tsx           # Sistema de ayuda inteligente
+│   ├── sql-code-block.tsx            # Bloques de código SQL con syntax highlighting
+│   ├── animated-sql-example.tsx      # Ejemplos animados tipo typewriter
+│   ├── data-table.tsx                # Componente de tablas reutilizable
+│   ├── database-visualizer.tsx       # Visualizador interactivo de bases de datos
+│   └── lesson-dropdown.tsx           # Dropdown de navegación entre lecciones
+├── lib/
+│   ├── database.ts                   # Lógica SQLite + datos precargados
+│   ├── lessons.ts                    # Definición de lecciones (interfaces + data)
+│   └── utils.ts                      # Utilidades (cn para Tailwind)
+├── package.json
+├── tsconfig.json
+├── tailwind.config.ts
+└── next.config.js
+```
+
+---
+
+## ✨ Características Implementadas
+
+### 🎓 Sistema de Lecciones
+- [x] Lección 0: Introducción a SQL y Bases de Datos Relacionales
+- [x] Lección 1: Consultas SELECT 101 (con 5 objetivos)
+- [x] Lecciones 2-5: columnas específicas, WHERE, ORDER BY, LIMIT
+- [x] Contenido educativo en Markdown limpio
+- [x] Ejemplos de código SQL con componentes React (no markdown embebido)
+- [x] Contextos del mundo real para cada lección
+- [x] Instrucciones paso a paso detalladas
+- [x] Pistas adicionales por lección
+- [x] Sistema de soluciones progresivas ("Stuck? Read this task's Solution")
+
+### 💻 Editor SQL Interactivo
+- [x] Monaco Editor integrado (syntax highlighting)
+- [x] Ejecución en tiempo real (debounce 500ms)
+- [x] Resultados mostrados en tabla estilizada (zebra stripes)
+- [x] Validación automática de objetivos
+- [x] **Tabla siempre visible** (se guarda última consulta válida)
+- [x] Border verde cuando completas todos los objetivos
+- [x] Contador de registros encontrados
+- [x] Layout estilo SQLBolt (editor 75% + objetivos/botón 25%)
+- [x] Objetivos no completados en negrita
+- [x] Botón "Termina las tareas para continuar" bloqueado hasta completar
+- [x] Sistema de soluciones: carga automáticamente la query correcta
+
+### 🧠 Sistema de Ayuda Inteligente
+- [x] Detecta errores de sintaxis después de 5 segundos
+- [x] Mensajes descriptivos contextuales:
+  - Query sin SELECT (ej: "* FROM movies")
+  - Falta FROM después de SELECT
+  - WHERE sin condición
+  - ORDER BY sin columna
+  - LIMIT sin número
+  - Comillas sin cerrar
+  - Paréntesis sin cerrar
+- [x] Animación suave (slide-in-right)
+- [x] Mensaje discreto con icono SVG profesional (naranja)
+- [x] Posicionado a la derecha del texto descriptivo del editor
+- [x] Desaparece automáticamente
+
+### 🎉 Sistema de Gamificación
+- [x] Checkmarks verdes para objetivos completados
+- [x] Objetivos incompletos en negrita
+- [x] Celebración al completar todos los objetivos
+- [x] Animación fade-scale suave (sin bounce)
+- [x] Icono CheckCircle limpio (de Lucide React)
+- [x] Barra de progreso en header de lecciones
+- [x] Botón de siguiente lección se desbloquea al completar objetivos
+- [x] Sin emojis en UI profesional
+
+### ✨ Ejemplos Animados
+- [x] Código SQL escribiéndose solo (typewriter effect)
+- [x] Terminal con fondo oscuro y cursor parpadeante
+- [x] Tabla de resultados reactiva en tiempo real
+- [x] Rota entre múltiples ejemplos automáticamente
+- [x] Controles de pausa/reinicio
+
+### 🏠 Página de Inicio Profesional
+- [x] Navbar con logo y navegación
+- [x] Hero section con gradientes y estadísticas
+- [x] Cards de tecnologías (SQL disponible, Python/JS/CSS próximamente)
+- [x] Sección de features con iconos
+- [x] Vista previa de lecciones SQL
+- [x] CTA section con gradiente vibrante
+- [x] Footer completo con links y legal
+
+### 🎨 Diseño y UI/UX
+- [x] Tablas estilizadas con zebra stripes y hover
+- [x] Paleta de colores consistente (azules e índigos)
+- [x] Código SQL con mismo estilo visual que Monaco Editor
+- [x] Componente SQLCodeBlock para mostrar código (#1E1E1E background)
+- [x] Animaciones suaves y profesionales
+- [x] Responsive design
+- [x] Sin emojis (diseño serio y profesional)
+- [x] Tipografía clara y legible
+- [x] Dropdown de navegación entre lecciones en navbar
+
+---
+
+## 🚀 Plan de Acción (Roadmap)
+
+### FASE 1: Completar SQL (2-3 semanas) 🔄
+**Objetivo**: Tener un curso completo de SQL desde básico hasta avanzado
+
+#### Lecciones faltantes:
+- [ ] Lección 6: JOINs (INNER, LEFT, RIGHT, FULL)
+- [ ] Lección 7: Funciones agregadas (COUNT, SUM, AVG, MIN, MAX)
+- [ ] Lección 8: GROUP BY y HAVING
+- [ ] Lección 9: Subconsultas (subqueries)
+- [ ] Lección 10: DISTINCT y eliminación de duplicados
+- [ ] Lección 11: CASE WHEN (condicionales)
+- [ ] Lección 12: Funciones de texto (CONCAT, UPPER, LOWER, SUBSTRING)
+- [ ] Lección 13: Funciones de fecha (DATE, NOW, DATEPART)
+- [ ] Lección 14: UNION, INTERSECT, EXCEPT
+- [ ] Lección 15: Índices y optimización de queries
+- [ ] Lección 16: Transacciones (BEGIN, COMMIT, ROLLBACK)
+- [ ] Lección 17: Vistas (CREATE VIEW)
+- [ ] Lección 18: Ejercicio final integrador
+
+#### Contenido educativo adicional:
+- [x] Lección 0: "Introducción a SQL y bases de datos"
+  - ¿Qué es SQL?
+  - Bases de datos relacionales
+  - Tabla de ejemplo (Vehículos) con DataTable component
+  - Visualizador interactivo de 3 bases de datos
+  - Click en BD → ver tablas → click en tabla → ver columnas + datos ficticios
+- [x] Visualizador interactivo con 3 bases de datos:
+  - Tienda Online (azul)
+  - Red Social (morado)
+  - Biblioteca (turquesa)
+- [x] Cada tabla muestra estructura + datos de ejemplo lado a lado
+- [ ] Explicar normalización básica
+- [ ] Claves primarias y foráneas
+
+#### Mejoras técnicas:
+- [ ] Agregar más tablas relacionadas (users, orders, products)
+- [ ] Implementar ejercicios con múltiples tablas
+- [ ] Sistema de pistas progresivas (3 niveles de ayuda)
+
+### FASE 2: Sistema de Usuarios y Progreso (2 semanas)
+- [ ] Autenticación con NextAuth.js o Clerk
+- [ ] Base de datos para usuarios (Supabase o Firebase)
+- [ ] Guardar progreso de lecciones por usuario
+- [ ] Dashboard personal con estadísticas
+- [ ] Sistema de puntos y logros
+- [ ] Racha de días consecutivos (streak)
+- [ ] Certificados al completar cursos
+
+### FASE 3: Python Interactivo (3-4 semanas)
+- [ ] Configurar Pyodide o similar para Python en browser
+- [ ] Crear 15-20 lecciones de Python:
+  - Variables y tipos de datos
+  - Estructuras de control (if, for, while)
+  - Funciones y módulos
+  - Listas, tuplas, diccionarios
+  - Clases y POO
+  - Manejo de errores
+  - Archivos y IO
+  - Librerías populares (NumPy, Pandas básico)
+- [ ] Editor Python con ejecución en navegador
+- [ ] Ejercicios prácticos del mundo real
+
+### FASE 4: JavaScript/TypeScript (3-4 semanas)
+- [ ] 15-20 lecciones de JavaScript:
+  - Variables (let, const, var)
+  - Funciones y arrow functions
+  - Arrays y métodos
+  - Objetos y destructuring
+  - Promesas y async/await
+  - DOM manipulation básico
+  - Event handling
+  - Fetch API
+  - ES6+ features
+  - TypeScript básico
+- [ ] Sandbox interactivo con console.log visible
+
+### FASE 5: CSS/HTML (2-3 semanas)
+- [ ] 10-15 lecciones de CSS:
+  - Selectores y especificidad
+  - Box model
+  - Flexbox
+  - Grid
+  - Posicionamiento
+  - Animaciones y transiciones
+  - Responsive design
+  - CSS moderno (variables, clamp, etc.)
+- [ ] Preview visual en tiempo real
+- [ ] Playground interactivo
+
+### FASE 6: Comunidad y Social (2 semanas)
+- [ ] Foro o comentarios en lecciones
+- [ ] Sistema de "soluciones compartidas"
+- [ ] Ranking global de usuarios
+- [ ] Desafíos semanales
+- [ ] Blog con artículos educativos
+
+### FASE 7: Mobile y Accesibilidad (1-2 semanas)
+- [ ] App móvil con React Native o PWA
+- [ ] Modo offline
+- [ ] Accesibilidad completa (ARIA, keyboard navigation)
+- [ ] Modo oscuro
+
+### FASE 8: Monetización (Opcional)
+- [ ] Plan gratuito (contenido básico)
+- [ ] Plan premium (contenido avanzado, proyectos, certificados)
+- [ ] Cursos especializados pagos
+- [ ] API para empresas
+
+---
+
+## 📐 Estándares de Código
+
+### TypeScript
+- Usar tipos explícitos siempre que sea posible
+- Interfaces para props de componentes
+- Evitar `any`, usar `unknown` si es necesario
+- Types en archivos separados si son complejos
+
+### React/Next.js
+- Componentes funcionales con hooks
+- `"use client"` para componentes interactivos
+- Server components por defecto cuando sea posible
+- Nombres descriptivos para componentes (PascalCase)
+- Props interface con `Props` suffix
+- Un componente por archivo
+
+### Estilos
+- TailwindCSS para estilos (utility-first)
+- Clases condicionales con `cn()` helper
+- Animaciones en `globals.css` con `@keyframes`
+- Colores consistentes del theme de Tailwind
+- Responsive design con breakpoints de Tailwind
+
+### Base de Datos
+- SQLite en memoria para ejercicios
+- Datos precargados en `initDatabase()`
+- Queries seguras (solo SELECT permitido para usuarios)
+- Validación de sintaxis antes de ejecutar
+
+### Lecciones
+- **Markdown para texto**: `explanation` contiene solo texto explicativo, sin código SQL
+- **sqlExamples**: Array de objetos `{title?, code}` para ejemplos SQL, renderizados con `<SQLCodeBlock />`
+- **dataTables**: Array con datos tabulares, renderizados con `<DataTable />`
+- Contexto del mundo real obligatorio
+- Instrucciones paso a paso detalladas
+- Mínimo 5 objetivos por lección práctica
+- Mínimo 3 pistas por lección
+- Array de `solutions` (una por objetivo) para sistema de ayuda
+- Ejemplos animados para conceptos complejos
+- Objetivos claros y verificables automáticamente
+
+---
+
+## 🎨 Convenciones de Diseño
+
+### Colores (Paleta Consistente)
+- **Primary**: Azul (`blue-600`, `blue-900`) e Índigo (`indigo-600`, `indigo-900`)
+- **Success**: Verde (`green-500`, `green-600`)
+- **Hints/Warnings**: Naranja (`orange-50`, `orange-600`)
+- **Código SQL**: Fondo `#1E1E1E`, keywords `#569CD6`, strings `#CE9178`, números `#B5CEA8`
+- **Cards de contexto**: `from-blue-50 to-indigo-50`
+- **Cards de ejercicio**: `from-indigo-50 to-blue-50`
+- **Sin uso de**: morados/rosas/amarillos mezclados aleatoriamente
+
+### Tipografía
+- **Headings**: Inter (via Google Fonts)
+- **Body**: Inter
+- **Code**: Monaco Editor (monospace)
+
+### Espaciado
+- Secciones: `py-16` o `py-20`
+- Cards: `p-6` o `p-8`
+- Botones: `px-4 py-2` o `px-8 py-6` (large)
+
+### Animaciones
+- Duración estándar: `300ms` - `500ms`
+- Easing: `ease-out` para entradas, `ease-in` para salidas
+- Usar `transition-all` con precaución (preferir propiedades específicas)
+
+### Componentes
+- Cards con `border-2` y `rounded-lg`
+- Tablas con zebra stripes (even/odd)
+- Hover states sutiles (`hover:shadow-lg`, `hover:scale-105`)
+- Focus states accesibles (ring-2)
+
+---
+
+## 🔧 Comandos Útiles
+
+```bash
+# Desarrollo
+npm run dev              # Servidor de desarrollo (localhost:3000)
+npm run build            # Build para producción
+npm run start            # Servidor de producción
+npm run lint             # Linter ESLint
+
+# Instalación
+npm install              # Instalar dependencias
+```
+
+---
+
+## 📝 Notas Importantes
+
+### Arquitectura de Componentes
+- **Separación de responsabilidades**: Datos en `lessons.ts`, presentación en componentes React en JSX
+- **Markdown para texto**: El `explanation` solo contiene texto explicativo, SIN código SQL
+- **SQLCodeBlock**: Componente React usado directamente en JSX para renderizar código SQL
+- **sqlExamples**: Array de objetos `{title?, code}` en lesson, mapeados en page.tsx con `<SQLCodeBlock />`
+- **DataTable**: Para tablas estructuradas, se define en array `dataTables` y se mapea en page.tsx
+- **DatabaseVisualizer**: Visualizador interactivo (solo lección 0)
+- **Componentes, no markdown**: El código SQL usa componentes React, no bloques markdown
+
+### Sistema de Ayuda y Soluciones
+- Detecta errores después de 5 segundos sin escribir
+- Hints aparecen a la derecha del texto descriptivo
+- Botón "Stuck? Read this task's Solution" carga solución del primer objetivo incompleto
+- Presionar repetidamente para completar todos los objetivos
+- Mensajes descriptivos y contextuales
+- Animaciones suaves (slide-in-right)
+
+### Validación de Objetivos
+- Se ejecuta en cada cambio de query (debounce 500ms)
+- Verifica estructura SQL y resultados devueltos
+- Marca objetivos completados con checkmark verde
+- Objetivos incompletos en **negrita**
+- Celebración al completar todos los objetivos
+- Botón de siguiente lección se desbloquea
+
+### Contenido Educativo
+- Inspiración: SQLBolt (traducido y adaptado)
+- Siempre incluir contexto del mundo real
+- Explicar el "por qué", no solo el "cómo"
+- Al menos 5 objetivos por lección práctica
+- Progresión lógica de conceptos
+- Código SQL siempre con mismo estilo visual del editor
+
+### Performance
+- Server components por defecto
+- Client components solo cuando sea necesario
+- Debounce en queries para reducir llamadas
+- SQLite en memoria (rápido, sin persistencia)
+
+---
+
+## 🎯 Objetivos del Proyecto
+
+1. **Educación accesible**: Contenido de calidad en español sin barreras de entrada
+2. **Aprendizaje práctico**: Ejercicios del mundo real, no teoría abstracta
+3. **Retroalimentación inmediata**: Ver resultados en tiempo real
+4. **Gamificación sutil**: Motivar sin ser abrumador
+5. **Comunidad**: Crear una comunidad hispanohablante de programadores
+6. **Escalabilidad**: Arquitectura preparada para múltiples lenguajes
+7. **Open Source**: Código abierto para contribuciones
+
+---
+
+## 🤝 Contribuciones
+
+### Áreas que necesitan ayuda:
+- [ ] Más lecciones de SQL
+- [ ] Traducción y mejora de contenido
+- [ ] Nuevos ejercicios prácticos
+- [ ] Mejoras en UI/UX
+- [ ] Optimizaciones de performance
+- [ ] Tests unitarios y E2E
+- [ ] Documentación
+
+### Proceso:
+1. Fork del repositorio
+2. Crear branch con nombre descriptivo
+3. Hacer cambios siguiendo los estándares
+4. Pull request con descripción detallada
+5. Review y merge
+
+---
+
+## 📚 Recursos de Referencia
+
+- **Inspiración**: SQLBolt.com
+- **Diseño**: Vercel, Linear, Stripe
+- **Educación**: Khan Academy, freeCodeCamp, Codecademy
+- **Técnico**: Next.js docs, TailwindCSS docs, MDN
+
+---
+
+## 🆕 Componentes Clave
+
+### SQLCodeBlock
+```typescript
+interface SQLCodeBlockProps {
+  code: string;
+  className?: string;
+}
+```
+Muestra código SQL con syntax highlighting idéntico al editor Monaco.
+
+### DataTable
+```typescript
+interface DataTableProps {
+  title?: string;
+  columns: string[];
+  rows: Record<string, any>[];
+}
+```
+Renderiza tablas de datos con estilos consistentes.
+
+### DatabaseVisualizer
+Visualizador interactivo de 3 bases de datos con navegación:
+- Click en BD → mostrar tablas
+- Click en tabla → mostrar columnas + datos de ejemplo
+
+### LessonDropdown
+Dropdown en navbar para navegar rápidamente entre lecciones.
+
+### Lesson Interface
+```typescript
+interface SQLExample {
+  title?: string;
+  code: string;
+}
+
+interface Lesson {
+  id: number;
+  title: string;
+  description: string;
+  explanation: string; // Solo texto explicativo, SIN código SQL
+  sqlExamples?: SQLExample[]; // Código SQL separado
+  dataTables?: DataTable[]; // Array para componente DataTable
+  objectives: string[];
+  hints: string[];
+  solutions?: string[]; // Una por objetivo
+  initialQuery: string;
+  solutionQuery: string;
+  animatedExamples?: AnimatedExample[];
+  practiceContext?: string;
+  practiceInstructions?: string;
+}
+```
+
+---
+
+**Última actualización**: Octubre 2025
+**Estado del proyecto**: MVP funcional - Sistema de lecciones completo
+**Prioridad actual**: Agregar más lecciones SQL (6-18)
+

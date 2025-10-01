@@ -15,6 +15,38 @@ export async function getDatabase() {
 }
 
 async function initDatabase(db: Database) {
+  // Crear tabla series con datos de ejemplo
+  await db.exec(`
+    CREATE TABLE series (
+      id INTEGER PRIMARY KEY,
+      titulo TEXT NOT NULL,
+      genero TEXT NOT NULL,
+      temporadas INTEGER NOT NULL,
+      año_estreno INTEGER NOT NULL,
+      calificacion REAL NOT NULL
+    );
+  `);
+
+  const seriesData = [
+    [1, "Stranger Things", "Ciencia Ficción", 4, 2016, 8.7],
+    [2, "Breaking Bad", "Drama", 5, 2008, 9.5],
+    [3, "The Crown", "Drama Histórico", 6, 2016, 8.6],
+    [4, "Black Mirror", "Ciencia Ficción", 6, 2011, 8.8],
+    [5, "The Witcher", "Fantasía", 3, 2019, 8.2],
+    [6, "Narcos", "Crimen", 3, 2015, 8.8],
+    [7, "Dark", "Ciencia Ficción", 3, 2017, 8.7],
+    [8, "La Casa de Papel", "Crimen", 5, 2017, 8.2],
+    [9, "Ozark", "Drama", 4, 2017, 8.5],
+    [10, "The Queen's Gambit", "Drama", 1, 2020, 8.6],
+  ];
+
+  for (const serie of seriesData) {
+    await db.run(
+      `INSERT INTO series (id, titulo, genero, temporadas, año_estreno, calificacion) VALUES (?, ?, ?, ?, ?, ?)`,
+      ...serie
+    );
+  }
+
   // Crear tabla movies con datos de ejemplo
   await db.exec(`
     CREATE TABLE movies (

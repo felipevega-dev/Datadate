@@ -76,21 +76,21 @@ export default function AnimatedSQLExample({ examples }: AnimatedSQLExampleProps
     <Card className="h-full border-2 border-blue-200 bg-gradient-to-br from-blue-50 to-white">
       <CardHeader className="pb-3">
         <div className="flex items-center justify-between">
-          <CardTitle className="text-lg flex items-center gap-2">
-            ✨ Ejemplo en vivo
+          <CardTitle className="text-lg text-blue-900">
+            Ejemplo en vivo
           </CardTitle>
           <div className="flex gap-2">
             <button
               onClick={handlePause}
-              className="px-3 py-1 text-xs bg-blue-100 hover:bg-blue-200 rounded-md transition-colors"
+              className="px-3 py-1 text-xs bg-blue-100 hover:bg-blue-200 text-blue-900 rounded-md transition-colors font-medium"
             >
-              {isAnimating ? "⏸ Pausar" : "▶ Continuar"}
+              {isAnimating ? "Pausar" : "Continuar"}
             </button>
             <button
               onClick={handleRestart}
-              className="px-3 py-1 text-xs bg-blue-500 text-white hover:bg-blue-600 rounded-md transition-colors"
+              className="px-3 py-1 text-xs bg-blue-600 text-white hover:bg-blue-700 rounded-md transition-colors font-medium"
             >
-              🔄 Reiniciar
+              Reiniciar
             </button>
           </div>
         </div>
@@ -106,10 +106,10 @@ export default function AnimatedSQLExample({ examples }: AnimatedSQLExampleProps
 
         {/* Results Table */}
         <div>
-          <div className="text-xs font-semibold text-gray-600 mb-2 flex items-center justify-between">
-            <span>📊 Resultados ({currentResults.length})</span>
+          <div className="text-xs font-semibold text-gray-700 mb-2 flex items-center justify-between">
+            <span>Resultados ({currentResults.length})</span>
             {currentResults.length > 0 && (
-              <span className="text-green-600 animate-pulse">● Actualizando...</span>
+              <span className="text-blue-600 text-[10px] font-normal">Actualizando...</span>
             )}
           </div>
           
@@ -145,9 +145,9 @@ export default function AnimatedSQLExample({ examples }: AnimatedSQLExampleProps
               </table>
             </div>
           ) : (
-            <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center text-gray-400 text-sm">
-              <div className="text-2xl mb-2">⏳</div>
-              <div>Esperando consulta...</div>
+            <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center text-gray-500 text-sm">
+              <div className="font-medium mb-1">Esperando consulta...</div>
+              <div className="text-xs text-gray-400">Los resultados aparecerán aquí</div>
             </div>
           )}
         </div>
