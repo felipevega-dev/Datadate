@@ -200,7 +200,7 @@ Estaremos usando una base de datos con información sobre series de Netflix para
       "Recuerda usar FROM series para especificar la tabla",
       "No olvides el punto y coma al final",
     ],
-    initialQuery: "-- Escribe tu consulta SELECT aquí\n",
+    initialQuery: "SELECT * FROM series",
     solutionQuery: "SELECT * FROM series;",
     solutions: [
       "SELECT titulo FROM series;",
@@ -224,18 +224,7 @@ Tu tarea es **consultar la base de datos** para obtener toda la información dis
 En plataformas de streaming, estas consultas básicas se hacen **cientos de veces al día** por analistas de datos, equipos de contenido y desarrolladores.
     `,
     practiceInstructions: `
-## 📝 ¿Qué debes hacer?
-
-Tu objetivo es escribir consultas SQL para obtener diferentes datos de la tabla \`series\`.
-
-**Pasos a seguir:**
-
-1. Comienza con la palabra clave \`SELECT\`
-2. Especifica las columnas que necesitas (o usa \`*\` para todas)
-3. Agrega \`FROM series\` para especificar la tabla
-4. Termina con punto y coma \`;\`
-
-**Resultado esperado:** Deberías ver todas las series con las columnas solicitadas: id, titulo, genero, temporadas, año_estreno, calificacion.
+Practica escribiendo consultas **SELECT** para obtener datos específicos de la tabla de series. Aprenderás a seleccionar todas las columnas con \`*\` o solo las que necesitas.
 
 💡 **Tip profesional:** El asterisco (\`*\`) es útil para exploración inicial, pero en producción es mejor especificar las columnas exactas que necesitas.
     `,
@@ -333,16 +322,12 @@ Además de hacer los resultados más manejables, escribir cláusulas para restri
     `,
     sqlExamples: [
       {
-        title: "Consulta SELECT con restricciones",
-        code: "SELECT columna, otra_columna, …\nFROM mi_tabla\nWHERE condicion\n    AND/OR otra_condicion\n    AND/OR …;"
-      },
-      {
         title: "Ejemplo con rango numérico",
         code: "SELECT * FROM series\nWHERE año_estreno BETWEEN 2015 AND 2020;"
       },
       {
-        title: "Ejemplo con lista",
-        code: "SELECT * FROM series\nWHERE temporadas IN (3, 4, 5);"
+        title: "Ejemplo con comparación exacta",
+        code: "SELECT * FROM series\nWHERE id = 6;"
       }
     ],
     objectives: [
@@ -365,33 +350,8 @@ Además de hacer los resultados más manejables, escribir cláusulas para restri
       "SELECT * FROM series WHERE año_estreno NOT BETWEEN 2015 AND 2020;",
       "SELECT titulo, año_estreno FROM series LIMIT 5;",
     ],
-    practiceContext: `
-## 🎬 Escenario del mundo real
-
-El equipo de análisis de Netflix necesita información específica del catálogo. En lugar de traer **TODOS** los datos de las series, necesitan consultas precisas:
-
-- El equipo de desarrollo web quiere actualizar una serie específica por su ID
-- El departamento de estadísticas quiere analizar tendencias de series lanzadas en ciertos períodos
-- Marketing quiere saber qué series son más recientes para campañas promocionales
-
-Usar **WHERE** es fundamental en producción. Sin filtros, estarías trayendo millones de filas innecesarias, lo que ralentizaría tu aplicación y consumiría recursos del servidor.
-    `,
     practiceInstructions: `
-## 📝 ¿Qué debes hacer?
-
-Usa la cláusula WHERE para filtrar resultados según diferentes condiciones:
-
-**Objetivo 1:** Encuentra la serie con \`id = 6\`
-- Usa: \`WHERE id = 6\`
-
-**Objetivo 2:** Series lanzadas entre 2015 y 2020
-- Usa: \`WHERE año_estreno BETWEEN 2015 AND 2020\`
-
-**Objetivo 3:** Series NO lanzadas entre 2015 y 2020
-- Usa: \`WHERE año_estreno NOT BETWEEN 2015 AND 2020\`
-
-**Objetivo 4:** Primeras 5 series con título y año
-- Usa: \`SELECT titulo, año_estreno FROM series LIMIT 5\`
+Practica usando **WHERE** para filtrar datos según condiciones numéricas. Aprenderás a usar comparaciones exactas, rangos con **BETWEEN** y limitar resultados con **LIMIT**.
 
 💡 **Tip profesional:** WHERE es la cláusula más usada en SQL de producción. El 90% de tus queries la incluirán.
     `,
@@ -442,140 +402,134 @@ Usa la cláusula WHERE para filtrar resultados según diferentes condiciones:
   },
   {
     id: 3,
-    title: "Lección 3: Consultas con WHERE",
-    description: "Filtra resultados con condiciones",
+    title: "Lección 3: Consultas con restricciones (Parte 2)",
+    description: "Filtra datos de texto con LIKE y wildcards",
     explanation: `
-# Filtrando datos con WHERE
+## Filtrando texto con WHERE
 
-La cláusula **WHERE** te permite filtrar resultados según condiciones.
+Cuando escribes cláusulas WHERE con columnas que contienen datos de texto, SQL soporta varios operadores útiles para hacer comparaciones de strings y coincidencia de patrones con wildcards.
 
-## Operadores comunes:
-- \`=\` → Igual
-- \`!=\` o \`<>\` → Diferente
-- \`>\`, \`<\`, \`>=\`, \`<=\` → Comparaciones numéricas
-- \`LIKE\` → Patrones de texto
+### Operadores de texto
 
-## Combinando condiciones con AND y OR
+Todas las cadenas deben estar entre comillas para que el analizador de queries pueda distinguir las palabras en el string de las palabras clave SQL.
 
-Puedes combinar múltiples condiciones:
-
-**AND** → Ambas condiciones deben cumplirse
-
-**OR** → Al menos una condición debe cumplirse
+Aunque la mayoría de implementaciones de bases de datos son eficientes usando estos operadores, la búsqueda de texto completo se deja mejor a bibliotecas dedicadas como Apache Lucene o Sphinx, que son más eficientes para búsquedas complejas.
     `,
+    dataTables: [
+      {
+        title: "Operadores de texto en SQL",
+        columns: ["Operador", "Condición", "Ejemplo"],
+        rows: [
+          {
+            Operador: "=",
+            Condición: "Comparación exacta sensible a mayúsculas/minúsculas",
+            Ejemplo: 'col_name = "abc"'
+          },
+          {
+            Operador: "!= o <>",
+            Condición: "Desigualdad exacta sensible a mayúsculas/minúsculas",
+            Ejemplo: 'col_name != "abcd"'
+          },
+          {
+            Operador: "LIKE",
+            Condición: "Comparación exacta insensible a mayúsculas/minúsculas",
+            Ejemplo: 'col_name LIKE "ABC"'
+          },
+          {
+            Operador: "NOT LIKE",
+            Condición: "Desigualdad insensible a mayúsculas/minúsculas",
+            Ejemplo: 'col_name NOT LIKE "ABCD"'
+          },
+          {
+            Operador: "%",
+            Condición: "Coincide con cero o más caracteres (solo con LIKE o NOT LIKE)",
+            Ejemplo: 'col_name LIKE "%AT%" (coincide "AT", "ATTIC", "CAT" o "BATS")'
+          },
+          {
+            Operador: "_",
+            Condición: "Coincide con un solo carácter (solo con LIKE o NOT LIKE)",
+            Ejemplo: 'col_name LIKE "AN_" (coincide "AND", pero no "AN")'
+          },
+          {
+            Operador: "IN (...)",
+            Condición: "String existe en una lista",
+            Ejemplo: 'col_name IN ("A", "B", "C")'
+          },
+          {
+            Operador: "NOT IN (...)",
+            Condición: "String no existe en una lista",
+            Ejemplo: 'col_name NOT IN ("D", "E", "F")'
+          }
+        ]
+      }
+    ],
     sqlExamples: [
       {
-        title: "Sintaxis básica",
-        code: "SELECT columnas\nFROM tabla\nWHERE condicion;"
+        title: "LIKE con wildcard %",
+        code: "SELECT * FROM series\nWHERE titulo LIKE '%Crown%';"
       },
       {
-        title: "Filtrar por año",
-        code: "SELECT * FROM movies WHERE year = 2003;"
-      },
-      {
-        title: "Filtrar por director",
-        code: "SELECT * FROM movies WHERE director = 'John Lasseter';"
-      },
-      {
-        title: "Comparación numérica",
-        code: "SELECT * FROM movies WHERE year >= 2000;"
-      },
-      {
-        title: "Combinando con AND",
-        code: "SELECT * FROM movies \nWHERE director = 'John Lasseter' AND year >= 2000;"
-      },
-      {
-        title: "Combinando con OR",
-        code: "SELECT * FROM movies \nWHERE director = 'John Lasseter' OR director = 'Pete Docter';"
+        title: "Lista de valores con IN",
+        code: "SELECT * FROM series\nWHERE genero IN ('Drama', 'Crimen', 'Fantasía');"
       }
     ],
     objectives: [
-      "Encuentra todas las películas dirigidas por John Lasseter",
-      "Encuentra todas las películas lanzadas en el año 2003 o después",
+      "Encuentra todas las series del género 'Drama'",
+      "Encuentra todas las series cuyo título empieza con 'The'",
+      "Encuentra todas las series cuyo título NO contiene 'The'",
+      "Encuentra las series de género Crimen o Ciencia Ficción",
     ],
     hints: [
-      'Usa WHERE director = "John Lasseter"',
-      "Para años: WHERE year >= 2003",
+      "Para comparación exacta usa: WHERE columna = 'valor'",
+      "LIKE 'The%' encuentra textos que EMPIEZAN con 'The'",
+      "LIKE '%palabra%' encuentra textos que CONTIENEN 'palabra'",
+      "IN permite verificar múltiples valores a la vez",
     ],
-    initialQuery: "SELECT * FROM movies WHERE ",
-    solutionQuery: "SELECT * FROM movies WHERE director = 'John Lasseter';",
-    practiceContext: `
-## 🎯 Escenario del mundo real
-
-Trabajas en el departamento de contenidos de un estudio. El jefe de producción quiere saber:
-- **"¿Cuántas películas ha dirigido John Lasseter en nuestro catálogo?"**
-- **"¿Qué películas tenemos del año 2003 en adelante?"**
-
-Traer **TODAS** las películas y luego filtrarlas manualmente sería ineficiente. En bases de datos con millones de registros, ¡tu consulta tardaría minutos u horas!
-
-La cláusula **WHERE** hace el filtrado directamente en la base de datos, devolviendo solo lo que necesitas.
-
-En el mundo real, prácticamente **todas las consultas llevan WHERE**. Sin filtros, estarías trayendo demasiados datos innecesarios.
-    `,
+    initialQuery: "SELECT * FROM series WHERE ",
+    solutionQuery: "SELECT * FROM series WHERE genero = 'Drama';",
+    solutions: [
+      "SELECT * FROM series WHERE genero = 'Drama';",
+      "SELECT * FROM series WHERE titulo LIKE 'The%';",
+      "SELECT * FROM series WHERE titulo NOT LIKE '%The%';",
+      "SELECT * FROM series WHERE genero IN ('Crimen', 'Ciencia Ficción');",
+    ],
     practiceInstructions: `
-## 📝 ¿Qué debes hacer?
+Practica filtrando datos de texto usando **LIKE** con wildcards (%), **NOT LIKE** para exclusiones, y **IN** para listas de valores. Aprenderás a buscar patrones en strings de forma flexible.
 
-**Objetivo 1:** Encuentra todas las películas dirigidas por John Lasseter
-- Usa: \`WHERE director = 'John Lasseter'\`
-- Nota: Los textos van entre comillas simples o dobles
-
-**Objetivo 2:** Encuentra películas del año 2003 o más recientes
-- Usa: \`WHERE year >= 2003\`
-- El operador \`>=\` significa "mayor o igual que"
-
-**Resultado esperado:** Solo verás las filas que cumplan con tu condición.
-
-💡 **Tip profesional:** WHERE es la cláusula más importante en SQL de producción. Aprender a filtrar bien te ahorrará horas de procesamiento.
+💡 **Tip profesional:** LIKE con % es potente pero puede ser lento en tablas grandes. Usa índices de texto completo en producción.
     `,
     animatedExamples: [
       {
         allData: [
-          { title: "Toy Story", director: "John Lasseter", year: 1995 },
-          { title: "Finding Nemo", director: "Andrew Stanton", year: 2003 },
-          { title: "Cars", director: "John Lasseter", year: 2006 },
-          { title: "Up", director: "Pete Docter", year: 2009 },
+          { titulo: "Breaking Bad", genero: "Drama" },
+          { titulo: "The Crown", genero: "Drama Histórico" },
+          { titulo: "Ozark", genero: "Drama" },
         ],
         steps: [
           {
-            code: "SELECT * FROM movies",
-            delay: 1000,
-            results: [
-              { title: "Toy Story", director: "John Lasseter", year: 1995 },
-              { title: "Finding Nemo", director: "Andrew Stanton", year: 2003 },
-              { title: "Cars", director: "John Lasseter", year: 2006 },
-              { title: "Up", director: "Pete Docter", year: 2009 },
-            ],
-          },
-          {
-            code: "SELECT * FROM movies\nWHERE",
-            delay: 800,
-            results: [
-              { title: "Toy Story", director: "John Lasseter", year: 1995 },
-              { title: "Finding Nemo", director: "Andrew Stanton", year: 2003 },
-              { title: "Cars", director: "John Lasseter", year: 2006 },
-              { title: "Up", director: "Pete Docter", year: 2009 },
-            ],
-          },
-          {
-            code: "SELECT * FROM movies\nWHERE director = 'John Lasseter';",
+            code: "SELECT * FROM series\nWHERE genero = 'Drama';",
             delay: 2000,
             results: [
-              { title: "Toy Story", director: "John Lasseter", year: 1995 },
-              { title: "Cars", director: "John Lasseter", year: 2006 },
+              { titulo: "Breaking Bad", genero: "Drama" },
+              { titulo: "Ozark", genero: "Drama" },
             ],
           },
         ],
       },
       {
-        allData: [],
+        allData: [
+          { titulo: "The Crown", genero: "Drama Histórico" },
+          { titulo: "The Witcher", genero: "Fantasía" },
+          { titulo: "The Queen's Gambit", genero: "Drama" },
+        ],
         steps: [
           {
-            code: "SELECT * FROM movies\nWHERE year >= 2000;",
+            code: "SELECT titulo FROM series\nWHERE titulo LIKE 'The%';",
             delay: 2000,
             results: [
-              { title: "Finding Nemo", director: "Andrew Stanton", year: 2003 },
-              { title: "Cars", director: "John Lasseter", year: 2006 },
-              { title: "Up", director: "Pete Docter", year: 2009 },
+              { titulo: "The Crown" },
+              { titulo: "The Witcher" },
+              { titulo: "The Queen's Gambit" },
             ],
           },
         ],
@@ -584,82 +538,219 @@ En el mundo real, prácticamente **todas las consultas llevan WHERE**. Sin filtr
   },
   {
     id: 4,
-    title: "Lección 4: Ordenando resultados",
-    description: "Usa ORDER BY para ordenar datos",
+    title: "Lección 4: Filtrado y ordenamiento de resultados",
+    description: "Usa DISTINCT, ORDER BY y LIMIT/OFFSET",
     explanation: `
-# Ordenando resultados con ORDER BY
+## Eliminando duplicados con DISTINCT
 
-Para ordenar los resultados, usa **ORDER BY**.
+Aunque los datos en una base de datos pueden ser únicos, los resultados de cualquier consulta particular pueden no serlo. Por ejemplo, en nuestra tabla de series, muchas series diferentes pueden pertenecer al mismo género.
 
-- **ASC** → Ascendente (por defecto)
-- **DESC** → Descendente
+SQL proporciona una forma conveniente de descartar filas que tienen un valor de columna duplicado usando la palabra clave **DISTINCT**.
 
-Puedes ordenar por múltiples columnas separándolas con comas.
+### Ordenando resultados
+
+A diferencia de nuestra tabla ordenada, la mayoría de los datos en bases de datos reales se agregan sin un orden particular. SQL proporciona una forma de ordenar tus resultados por una columna dada en orden ascendente o descendente usando la cláusula **ORDER BY**.
+
+Cuando se especifica ORDER BY, cada fila se ordena alfa-numéricamente según el valor de la columna especificada.
+
+### Limitando resultados a un subconjunto
+
+Otra cláusula comúnmente usada con ORDER BY son **LIMIT** y **OFFSET**, que son optimizaciones útiles para indicar a la base de datos el subconjunto de resultados que te interesan.
+
+LIMIT reducirá el número de filas a devolver, y el OFFSET opcional especificará desde dónde comenzar a contar el número de filas.
     `,
     sqlExamples: [
       {
-        title: "Sintaxis básica",
-        code: "SELECT columnas\nFROM tabla\nORDER BY columna ASC/DESC;"
+        title: "DISTINCT y ORDER BY",
+        code: "SELECT DISTINCT genero FROM series\nORDER BY genero;"
       },
       {
-        title: "Ordenar por año descendente",
-        code: "SELECT * FROM movies ORDER BY year DESC;"
-      },
-      {
-        title: "Ordenar alfabéticamente",
-        code: "SELECT title FROM movies ORDER BY title ASC;"
-      },
-      {
-        title: "Ordenar por múltiples columnas",
-        code: "SELECT * FROM movies ORDER BY director, year DESC;"
+        title: "LIMIT y OFFSET para paginación",
+        code: "SELECT titulo FROM series\nORDER BY titulo\nLIMIT 5 OFFSET 5;"
       }
     ],
     objectives: [
-      "Lista todas las películas ordenadas por año de lanzamiento (más recientes primero)",
-      "Lista los títulos de las películas ordenados alfabéticamente",
+      "Lista todos los géneros de series sin duplicados (alfabéticamente)",
+      "Lista las últimas 4 series lanzadas (de más reciente a menos reciente)",
+      "Lista las primeras 5 series ordenadas alfabéticamente por título",
+      "Lista las siguientes 5 series ordenadas alfabéticamente (de la 6 a la 10)",
     ],
     hints: [
-      "Usa ORDER BY year DESC para ordenar de más reciente a más antiguo",
-      "Usa ORDER BY title ASC para orden alfabético",
+      "DISTINCT elimina valores duplicados de los resultados",
+      "ORDER BY columna DESC ordena de mayor a menor",
+      "LIMIT 5 toma solo los primeros 5 resultados",
+      "OFFSET 5 salta los primeros 5 y empieza desde el 6to",
     ],
-    initialQuery: "SELECT * FROM movies ORDER BY ",
-    solutionQuery: "SELECT * FROM movies ORDER BY year DESC;",
+    initialQuery: "SELECT * FROM series ",
+    solutionQuery: "SELECT DISTINCT genero FROM series ORDER BY genero;",
+    solutions: [
+      "SELECT DISTINCT genero FROM series ORDER BY genero;",
+      "SELECT * FROM series ORDER BY año_estreno DESC LIMIT 4;",
+      "SELECT titulo FROM series ORDER BY titulo LIMIT 5;",
+      "SELECT titulo FROM series ORDER BY titulo LIMIT 5 OFFSET 5;",
+    ],
+    practiceInstructions: `
+Practica eliminando duplicados con **DISTINCT**, ordenando resultados con **ORDER BY** (ASC/DESC), y limitando datos con **LIMIT** y **OFFSET** para paginación.
+
+💡 **Tip profesional:** En APIs REST, LIMIT y OFFSET son como \`page_size\` y \`page_number\`. Esto es paginación real de bases de datos.
+    `,
+    animatedExamples: [
+      {
+        allData: [
+          { genero: "Ciencia Ficción" },
+          { genero: "Crimen" },
+          { genero: "Drama" },
+        ],
+        steps: [
+          {
+            code: "SELECT DISTINCT genero FROM series\nORDER BY genero;",
+            delay: 2000,
+            results: [
+              { genero: "Ciencia Ficción" },
+              { genero: "Crimen" },
+              { genero: "Drama" },
+            ],
+          },
+        ],
+      },
+      {
+        allData: [
+          { titulo: "The Queen's Gambit", año_estreno: 2020 },
+          { titulo: "The Witcher", año_estreno: 2019 },
+          { titulo: "Ozark", año_estreno: 2017 },
+        ],
+        steps: [
+          {
+            code: "SELECT titulo, año_estreno FROM series\nORDER BY año_estreno DESC\nLIMIT 3;",
+            delay: 2000,
+            results: [
+              { titulo: "The Queen's Gambit", año_estreno: 2020 },
+              { titulo: "The Witcher", año_estreno: 2019 },
+              { titulo: "Ozark", año_estreno: 2017 },
+            ],
+          },
+        ],
+      },
+    ],
   },
   {
     id: 5,
-    title: "Lección 5: Limitando resultados",
-    description: "Usa LIMIT para obtener solo algunos registros",
+    title: "Lección 5: Repaso de consultas SELECT simples",
+    description: "Practica todo lo aprendido con un nuevo dataset",
     explanation: `
-# Limitando resultados con LIMIT
+## 🎉 ¡Excelente progreso!
 
-**LIMIT** restringe el número de filas devueltas. Es útil para obtener los "top N" resultados o paginar datos.
+Has aprendido los fundamentos de SQL. Ahora es momento de practicar con un dataset diferente para consolidar tus conocimientos.
 
-Combina LIMIT con ORDER BY para obtener los mejores o peores resultados según un criterio.
+### Sintaxis completa de SELECT
+
+Esta es la estructura completa que has aprendido hasta ahora:
+
+\`\`\`sql
+SELECT columna, otra_columna, …
+FROM tabla
+WHERE condicion(es)
+ORDER BY columna ASC/DESC
+LIMIT num_limit OFFSET num_offset;
+\`\`\`
+
+### Sobre el dataset
+
+En este ejercicio trabajarás con información de las ciudades más pobladas de **Sudamérica**, incluyendo su población y ubicación geoespacial.
+
+**Dato interesante:** Las latitudes positivas corresponden al hemisferio norte, y las negativas al hemisferio sur. Las longitudes positivas corresponden al hemisferio este (Asia, Europa), y las negativas al hemisferio oeste (América).
+
+### Reto
+
+Escribe consultas SQL para encontrar la información solicitada en cada objetivo. Necesitarás combinar diferentes cláusulas (WHERE, ORDER BY, LIMIT, OFFSET) según cada tarea.
+
+Una vez completada esta lección, estarás listo para aprender sobre queries que abarcan múltiples tablas (JOINs).
     `,
+    dataTables: [
+      {
+        title: "Vista previa de la tabla ciudades",
+        columns: ["nombre", "pais", "poblacion"],
+        rows: [
+          { nombre: "São Paulo", pais: "Brasil", poblacion: "12.3M" },
+          { nombre: "Buenos Aires", pais: "Argentina", poblacion: "15.6M" },
+          { nombre: "Lima", pais: "Perú", poblacion: "10.7M" },
+          { nombre: "Bogotá", pais: "Colombia", poblacion: "11.2M" },
+          { nombre: "Rio de Janeiro", pais: "Brasil", poblacion: "13.6M" },
+        ]
+      }
+    ],
     sqlExamples: [
       {
-        title: "Sintaxis básica",
-        code: "SELECT columnas\nFROM tabla\nLIMIT numero;"
+        title: "Ejemplo: Ciudades de un país específico",
+        code: "SELECT nombre, poblacion\nFROM ciudades\nWHERE pais = 'Brasil'\nORDER BY poblacion DESC;"
       },
       {
-        title: "Primeros 5 registros",
-        code: "SELECT * FROM movies LIMIT 5;"
-      },
-      {
-        title: "Top 3 mejor calificadas",
-        code: "SELECT * FROM movies ORDER BY rating DESC LIMIT 3;"
+        title: "Ejemplo: Top ciudades por población",
+        code: "SELECT nombre, pais, poblacion\nFROM ciudades\nORDER BY poblacion DESC\nLIMIT 3;"
       }
     ],
     objectives: [
-      "Obtén las primeras 5 películas de la tabla",
-      "Obtén las 3 películas con mayor rating",
+      "Lista todas las ciudades de Colombia con sus poblaciones",
+      "Ordena todas las ciudades de Brasil por latitud (de sur a norte)",
+      "Lista todas las ciudades al sur de Lima (latitud < -12.0464), ordenadas de sur a norte",
+      "Lista las 2 ciudades más pobladas de Sudamérica",
+      "Lista la 3ra y 4ta ciudad más poblada de Brasil",
     ],
     hints: [
-      "Usa LIMIT 5 al final de tu consulta",
-      "Combina ORDER BY rating DESC con LIMIT 3",
+      "Usa WHERE pais = 'Colombia' para filtrar por país",
+      "ORDER BY latitud ASC ordena de sur (-) a norte (+)",
+      "Las latitudes negativas más pequeñas están más al sur",
+      "Combina ORDER BY poblacion DESC con LIMIT 2",
+      "Usa LIMIT 2 OFFSET 2 para saltar las primeras 2",
     ],
-    initialQuery: "SELECT * FROM movies ",
-    solutionQuery: "SELECT * FROM movies ORDER BY rating DESC LIMIT 3;",
+    initialQuery: "SELECT * FROM ciudades ",
+    solutionQuery: "SELECT nombre, poblacion FROM ciudades WHERE pais = 'Colombia';",
+    solutions: [
+      "SELECT nombre, poblacion FROM ciudades WHERE pais = 'Colombia';",
+      "SELECT * FROM ciudades WHERE pais = 'Brasil' ORDER BY latitud ASC;",
+      "SELECT * FROM ciudades WHERE latitud < -12.0464 ORDER BY latitud ASC;",
+      "SELECT nombre, pais, poblacion FROM ciudades ORDER BY poblacion DESC LIMIT 2;",
+      "SELECT nombre, pais, poblacion FROM ciudades WHERE pais = 'Brasil' ORDER BY poblacion DESC LIMIT 2 OFFSET 2;",
+    ],
+    practiceInstructions: `
+Practica combinando **WHERE**, **ORDER BY**, **LIMIT** y **OFFSET** para responder preguntas complejas sobre las ciudades sudamericanas. Esta es tu oportunidad para demostrar todo lo que has aprendido.
+
+💡 **Tip profesional:** En el mundo real, las consultas rara vez son simples SELECT *. Casi siempre combinan múltiples cláusulas para obtener exactamente los datos que necesitas.
+    `,
+    animatedExamples: [
+      {
+        allData: [
+          { nombre: "Bogotá", pais: "Colombia", poblacion: 11167000 },
+          { nombre: "Medellín", pais: "Colombia", poblacion: 2569000 },
+        ],
+        steps: [
+          {
+            code: "SELECT nombre, poblacion\nFROM ciudades\nWHERE pais = 'Colombia';",
+            delay: 2000,
+            results: [
+              { nombre: "Bogotá", poblacion: 11167000 },
+              { nombre: "Medellín", poblacion: 2569000 },
+            ],
+          },
+        ],
+      },
+      {
+        allData: [
+          { nombre: "Buenos Aires", pais: "Argentina", poblacion: 15594000 },
+          { nombre: "Rio de Janeiro", pais: "Brasil", poblacion: 13634000 },
+        ],
+        steps: [
+          {
+            code: "SELECT nombre, pais, poblacion\nFROM ciudades\nORDER BY poblacion DESC\nLIMIT 2;",
+            delay: 2000,
+            results: [
+              { nombre: "Buenos Aires", pais: "Argentina", poblacion: 15594000 },
+              { nombre: "Rio de Janeiro", pais: "Brasil", poblacion: 13634000 },
+            ],
+          },
+        ],
+      },
+    ],
   },
 ];
 

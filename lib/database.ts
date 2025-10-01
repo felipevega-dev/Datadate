@@ -47,35 +47,37 @@ async function initDatabase(db: Database) {
     );
   }
 
-  // Crear tabla movies con datos de ejemplo
+  // Crear tabla de ciudades sudamericanas
   await db.exec(`
-    CREATE TABLE movies (
+    CREATE TABLE ciudades (
       id INTEGER PRIMARY KEY,
-      title TEXT NOT NULL,
-      director TEXT NOT NULL,
-      year INTEGER NOT NULL,
-      length_minutes INTEGER NOT NULL,
-      rating REAL
+      nombre TEXT NOT NULL,
+      pais TEXT NOT NULL,
+      poblacion INTEGER NOT NULL,
+      latitud REAL NOT NULL,
+      longitud REAL NOT NULL
     );
   `);
 
-  const moviesData = [
-    [1, "Toy Story", "John Lasseter", 1995, 81, 8.3],
-    [2, "A Bug's Life", "John Lasseter", 1998, 95, 7.2],
-    [3, "Toy Story 2", "John Lasseter", 1999, 93, 7.8],
-    [4, "Monsters, Inc.", "Pete Docter", 2001, 92, 8.1],
-    [5, "Finding Nemo", "Andrew Stanton", 2003, 107, 8.2],
-    [6, "The Incredibles", "Brad Bird", 2004, 116, 8.0],
-    [7, "Cars", "John Lasseter", 2006, 117, 7.2],
-    [8, "Ratatouille", "Brad Bird", 2007, 115, 8.0],
-    [9, "WALL-E", "Andrew Stanton", 2008, 104, 8.4],
-    [10, "Up", "Pete Docter", 2009, 101, 8.3],
+  const ciudadesData = [
+    [1, "São Paulo", "Brasil", 12325000, -23.5505, -46.6333],
+    [2, "Buenos Aires", "Argentina", 15594000, -34.6037, -58.3816],
+    [3, "Lima", "Perú", 10719000, -12.0464, -77.0428],
+    [4, "Bogotá", "Colombia", 11167000, 4.7110, -74.0721],
+    [5, "Rio de Janeiro", "Brasil", 13634000, -22.9068, -43.1729],
+    [6, "Santiago", "Chile", 6812000, -33.4489, -70.6693],
+    [7, "Caracas", "Venezuela", 2936000, 10.4806, -66.9036],
+    [8, "Montevideo", "Uruguay", 1753000, -34.9011, -56.1645],
+    [9, "Quito", "Ecuador", 2781000, -0.1807, -78.4678],
+    [10, "La Paz", "Bolivia", 2004000, -16.5000, -68.1500],
+    [11, "Medellín", "Colombia", 2569000, 6.2442, -75.5812],
+    [12, "Brasília", "Brasil", 4804000, -15.8267, -47.9218],
   ];
 
-  for (const movie of moviesData) {
+  for (const ciudad of ciudadesData) {
     await db.run(
-      `INSERT INTO movies (id, title, director, year, length_minutes, rating) VALUES (?, ?, ?, ?, ?, ?)`,
-      ...movie
+      `INSERT INTO ciudades (id, nombre, pais, poblacion, latitud, longitud) VALUES (?, ?, ?, ?, ?, ?)`,
+      ...ciudad
     );
   }
 }

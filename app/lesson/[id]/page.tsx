@@ -132,6 +132,16 @@ export default async function LessonPage({ params }: { params: Promise<{ id: str
                 {lesson.explanation}
               </ReactMarkdown>
 
+              {/* Tablas de datos (justo después del texto explicativo) */}
+              {lesson.dataTables && lesson.dataTables.map((table, index) => (
+                <DataTable
+                  key={index}
+                  title={table.title}
+                  columns={table.columns}
+                  rows={table.rows}
+                />
+              ))}
+
               {/* Ejemplos de código SQL con componente React */}
               {lesson.sqlExamples && lesson.sqlExamples.map((example, index) => (
                 <div key={index} className="my-6">
@@ -140,16 +150,6 @@ export default async function LessonPage({ params }: { params: Promise<{ id: str
                   )}
                   <SQLCodeBlock code={example.code} />
                 </div>
-              ))}
-              
-              {/* Tablas de datos */}
-              {lesson.dataTables && lesson.dataTables.map((table, index) => (
-                <DataTable
-                  key={index}
-                  title={table.title}
-                  columns={table.columns}
-                  rows={table.rows}
-                />
               ))}
 
               {/* Visualizador de bases de datos (solo para lección 0) */}
@@ -190,44 +190,81 @@ export default async function LessonPage({ params }: { params: Promise<{ id: str
               </CardTitle>
             </CardHeader>
             <CardContent>
-              {lesson.practiceInstructions && (
-                <div className="mb-6 prose prose-base max-w-none">
-                  <ReactMarkdown
-                    components={{
-                      h2: ({ children }) => <h2 className="text-xl font-bold mb-3 text-indigo-900">{children}</h2>,
-                      p: ({ children }) => <p className="mb-3 text-gray-700 leading-relaxed">{children}</p>,
-                      ul: ({ children }) => <ul className="mb-4 space-y-2 ml-4">{children}</ul>,
-                      ol: ({ children }) => <ol className="mb-4 space-y-2 ml-4 list-decimal">{children}</ol>,
-                      li: ({ children }) => <li className="text-gray-700">{children}</li>,
-                      strong: ({ children }) => <strong className="font-bold text-indigo-900">{children}</strong>,
-                      code: ({ children }) => (
-                        <code className="bg-indigo-100 px-2 py-1 rounded text-sm font-mono text-indigo-800">
-                          {children}
-                        </code>
-                      ),
-                    }}
-                  >
-                    {lesson.practiceInstructions}
-                  </ReactMarkdown>
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                {/* Instrucciones */}
+                <div>
+                  {lesson.practiceInstructions && (
+                    <div className="prose prose-base max-w-none">
+                      <ReactMarkdown
+                        components={{
+                          h2: ({ children }) => <h2 className="text-xl font-bold mb-3 text-indigo-900">{children}</h2>,
+                          p: ({ children }) => <p className="mb-3 text-gray-700 leading-relaxed text-sm">{children}</p>,
+                          ul: ({ children }) => <ul className="mb-4 space-y-3 ml-4">{children}</ul>,
+                          ol: ({ children }) => <ol className="mb-4 space-y-3 ml-4 list-decimal">{children}</ol>,
+                          li: ({ children }) => {
+                            // Detectar si el contenido tiene "Usa:" para ocultar la solución
+                            const text = children?.toString() || '';
+                            const hasUsaPattern = text.includes('Usa:');
+                            
+                            if (hasUsaPattern) {
+                              return (
+                                <li className="text-gray-700 text-sm group">
+                                  <div className="flex flex-col gap-1">
+                                    {children}
+                                  </div>
+                                </li>
+                              );
+                            }
+                            
+                            return <li className="text-gray-700 text-sm">{children}</li>;
+                          },
+                          strong: ({ children }) => <strong className="font-bold text-indigo-900">{children}</strong>,
+                          code: ({ children }) => {
+                            // Detectar si el código es una solución (viene después de "Usa:")
+                            const parentText = children?.toString() || '';
+                            const isSolution = parentText.includes('SELECT') || parentText.includes('WHERE') || parentText.includes('ORDER BY');
+                            
+                            if (isSolution) {
+                              return (
+                                <code className="bg-gray-300 px-2 py-1 rounded text-xs font-mono text-transparent group-hover:bg-indigo-100 group-hover:text-indigo-800 transition-all duration-200 cursor-help">
+                                  {children}
+                                </code>
+                              );
+                            }
+                            
+                            return (
+                              <code className="bg-indigo-100 px-2 py-1 rounded text-xs font-mono text-indigo-800">
+                                {children}
+                              </code>
+                            );
+                          },
+                        }}
+                      >
+                        {lesson.practiceInstructions}
+                      </ReactMarkdown>
+                    </div>
+                  )}
                 </div>
-              )}
 
-              {/* Pistas colapsables */}
-              {lesson.hints.length > 0 && (
-                <div className="mt-4 p-4 bg-blue-50 border border-blue-200 rounded-lg">
-                  <div className="font-semibold text-blue-900 mb-2">
-                    Pistas adicionales
-                  </div>
-                  <ul className="space-y-1">
-                    {lesson.hints.map((hint, index) => (
-                      <li key={index} className="flex items-start gap-2 text-sm">
-                        <span className="text-blue-600">•</span>
-                        <span className="text-gray-700">{hint}</span>
-                      </li>
-                    ))}
-                  </ul>
+                {/* Pistas adicionales */}
+                <div>
+                  {lesson.hints.length > 0 && (
+                    <div className="p-4 bg-blue-50 border border-blue-200 rounded-lg h-fit">
+                      <div className="font-semibold text-blue-900 mb-3 text-base">
+                        💡 Pistas adicionales
+                      </div>
+                      <ul className="space-y-2">
+                        {lesson.hints.map((hint, index) => (
+                          <li key={index} className="flex items-start gap-2 text-sm">
+                            <span className="text-blue-600 flex-shrink-0 mt-0.5">•</span>
+                            <span className="text-gray-700">{hint}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
                 </div>
-              )}
+              </div>
             </CardContent>
           </Card>
 

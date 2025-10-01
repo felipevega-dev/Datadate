@@ -69,28 +69,47 @@ D:\Proyectos\SQL/
 ## ✨ Características Implementadas
 
 ### 🎓 Sistema de Lecciones
-- [x] Lección 0: Introducción a SQL y Bases de Datos Relacionales
-- [x] Lección 1: Consultas SELECT 101 (con 5 objetivos)
-- [x] Lecciones 2-5: columnas específicas, WHERE, ORDER BY, LIMIT
+- [x] **Lección 0**: Introducción a SQL y Bases de Datos Relacionales (tabla: series)
+  - Visualizador interactivo de 3 bases de datos (Tienda, Red Social, Biblioteca)
+  - Introducción conceptual, sin ejercicios
+- [x] **Lección 1**: Consultas SELECT 101 (tabla: series)
+  - 5 objetivos: columnas específicas, SELECT *, combinaciones
+  - Contexto del mundo real (solo en Lección 1)
+- [x] **Lección 2**: Consultas con restricciones numéricas (tabla: series)
+  - WHERE, BETWEEN, NOT BETWEEN, LIMIT
+  - 4 objetivos con filtros numéricos
+- [x] **Lección 3**: Consultas con restricciones de texto (tabla: series)
+  - LIKE, wildcards (%), NOT LIKE, IN, NOT IN
+  - Tabla de operadores de texto en formato DataTable
+  - 4 objetivos con patrones de texto
+- [x] **Lección 4**: Filtrado y ordenamiento (tabla: series)
+  - DISTINCT, ORDER BY, LIMIT, OFFSET
+  - 4 objetivos con ordenamiento y paginación
+- [x] **Lección 5**: Review de consultas SELECT simples (tabla: ciudades)
+  - Dataset nuevo: Ciudades de Sudamérica
+  - 5 objetivos combinando WHERE, ORDER BY, LIMIT, OFFSET
+  - Lección de repaso antes de avanzar a JOINs
 - [x] Contenido educativo en Markdown limpio
-- [x] Ejemplos de código SQL con componentes React (no markdown embebido)
-- [x] Contextos del mundo real para cada lección
-- [x] Instrucciones paso a paso detalladas
-- [x] Pistas adicionales por lección
-- [x] Sistema de soluciones progresivas ("Stuck? Read this task's Solution")
+- [x] Ejemplos de código SQL con componentes React (máximo 2 por lección)
+- [x] Instrucciones concisas en ejercicio práctico
+- [x] Pistas adicionales por lección en layout de 2 columnas
+- [x] Sistema de soluciones progresivas con hover (spoiler effect)
 
 ### 💻 Editor SQL Interactivo
 - [x] Monaco Editor integrado (syntax highlighting)
 - [x] Ejecución en tiempo real (debounce 500ms)
-- [x] Resultados mostrados en tabla estilizada (zebra stripes)
-- [x] Validación automática de objetivos
+- [x] Resultados mostrados en tabla estilizada (zebra stripes, max-height 300px con scroll)
+- [x] Validación automática de objetivos específicos por lección
 - [x] **Tabla siempre visible** (se guarda última consulta válida)
 - [x] Border verde cuando completas todos los objetivos
-- [x] Contador de registros encontrados
-- [x] Layout estilo SQLBolt (editor 75% + objetivos/botón 25%)
-- [x] Objetivos no completados en negrita
+- [x] Layout optimizado: Resultados (full width) + Editor (65%) + Objetivos (35%)
+- [x] Altura adaptativa (sin min-height forzado, solo según contenido)
+- [x] **Objetivos secuenciales**: se completan uno por uno
+- [x] **Objetivos persistentes**: completados permanecen verdes hasta reload
+- [x] Objetivos bloqueados (🔒) en gris hasta desbloquear
 - [x] Botón "Termina las tareas para continuar" bloqueado hasta completar
-- [x] Sistema de soluciones: carga automáticamente la query correcta
+- [x] Sistema de soluciones: carga automáticamente la query del objetivo activo
+- [x] Editor SQL con altura fija de 250px (sin flex-1)
 
 ### 🧠 Sistema de Ayuda Inteligente
 - [x] Detecta errores de sintaxis después de 5 segundos
@@ -109,13 +128,15 @@ D:\Proyectos\SQL/
 
 ### 🎉 Sistema de Gamificación
 - [x] Checkmarks verdes para objetivos completados
-- [x] Objetivos incompletos en negrita
+- [x] Objetivos activos en negrita (negro)
+- [x] Objetivos bloqueados con 🔒 en gris claro
 - [x] Celebración al completar todos los objetivos
 - [x] Animación fade-scale suave (sin bounce)
 - [x] Icono CheckCircle limpio (de Lucide React)
 - [x] Barra de progreso en header de lecciones
 - [x] Botón de siguiente lección se desbloquea al completar objetivos
-- [x] Sin emojis en UI profesional
+- [x] Progreso secuencial y persistente por sesión
+- [x] Sin emojis en UI profesional (excepto 🔒 para bloqueados)
 
 ### ✨ Ejemplos Animados
 - [x] Código SQL escribiéndose solo (typewriter effect)
@@ -139,10 +160,16 @@ D:\Proyectos\SQL/
 - [x] Código SQL con mismo estilo visual que Monaco Editor
 - [x] Componente SQLCodeBlock para mostrar código (#1E1E1E background)
 - [x] Animaciones suaves y profesionales
-- [x] Responsive design
+- [x] Responsive design (grid-cols-1 lg:grid-cols-2)
 - [x] Sin emojis (diseño serio y profesional)
 - [x] Tipografía clara y legible
 - [x] Dropdown de navegación entre lecciones en navbar
+- [x] **Layout de ejercicio práctico en 2 columnas**: Instrucciones | Pistas
+- [x] **Soluciones ocultas con hover**: efecto spoiler (gris → visible)
+- [x] **Sin contador de registros** en resultados (solo título)
+- [x] Contexto del mundo real solo en Lección 1
+- [x] Máximo 2 ejemplos SQL por lección
+- [x] Tablas de datos justo después del texto explicativo
 
 ---
 
@@ -285,18 +312,24 @@ D:\Proyectos\SQL/
 - Datos precargados en `initDatabase()`
 - Queries seguras (solo SELECT permitido para usuarios)
 - Validación de sintaxis antes de ejecutar
+- **Tabla series**: 10 series de Netflix (id, titulo, genero, temporadas, año_estreno, calificacion)
+- **Tabla ciudades**: 12 ciudades de Sudamérica (id, nombre, pais, poblacion, latitud, longitud)
+- ~~Tabla movies eliminada~~ (ya no se usa)
 
 ### Lecciones
 - **Markdown para texto**: `explanation` contiene solo texto explicativo, sin código SQL
-- **sqlExamples**: Array de objetos `{title?, code}` para ejemplos SQL, renderizados con `<SQLCodeBlock />`
+- **sqlExamples**: Array de objetos `{title?, code}` para ejemplos SQL (máximo 2 por lección)
 - **dataTables**: Array con datos tabulares, renderizados con `<DataTable />`
-- Contexto del mundo real obligatorio
-- Instrucciones paso a paso detalladas
-- Mínimo 5 objetivos por lección práctica
-- Mínimo 3 pistas por lección
-- Array de `solutions` (una por objetivo) para sistema de ayuda
-- Ejemplos animados para conceptos complejos
+- **practiceContext**: Solo en Lección 1 (eliminado del resto)
+- **practiceInstructions**: Texto conciso explicando el contexto general (sin listar objetivos)
+- Instrucciones en layout de 2 columnas (instrucciones | pistas)
+- 4-5 objetivos por lección práctica
+- Mínimo 4 pistas por lección (en columna derecha)
+- Array de `solutions` (una por objetivo) para sistema de ayuda secuencial
+- Ejemplos animados para conceptos complejos (máximo 2 por lección)
 - Objetivos claros y verificables automáticamente
+- **initialQuery** incluye la tabla relacionada (ej: `SELECT * FROM series`)
+- Soluciones ocultas con hover (efecto spoiler)
 
 ---
 
@@ -469,27 +502,44 @@ interface SQLExample {
   code: string;
 }
 
+interface DataTable {
+  title?: string;
+  columns: string[];
+  rows: Record<string, any>[];
+}
+
 interface Lesson {
   id: number;
   title: string;
   description: string;
   explanation: string; // Solo texto explicativo, SIN código SQL
-  sqlExamples?: SQLExample[]; // Código SQL separado
-  dataTables?: DataTable[]; // Array para componente DataTable
+  sqlExamples?: SQLExample[]; // Máximo 2 por lección
+  dataTables?: DataTable[]; // Array para componente DataTable (renderiza después de explanation)
   objectives: string[];
   hints: string[];
-  solutions?: string[]; // Una por objetivo
-  initialQuery: string;
+  solutions?: string[]; // Una por objetivo, para sistema secuencial
+  initialQuery: string; // Incluye la tabla relacionada (ej: "SELECT * FROM series")
   solutionQuery: string;
   animatedExamples?: AnimatedExample[];
-  practiceContext?: string;
-  practiceInstructions?: string;
+  practiceContext?: string; // Solo en Lección 1
+  practiceInstructions?: string; // Texto conciso (sin listar objetivos)
 }
 ```
 
 ---
 
 **Última actualización**: Octubre 2025
-**Estado del proyecto**: MVP funcional - Sistema de lecciones completo
-**Prioridad actual**: Agregar más lecciones SQL (6-18)
+**Estado del proyecto**: MVP funcional - 6 lecciones completas (0-5)
+**Prioridad actual**: Agregar lecciones SQL avanzadas (JOINs, funciones agregadas, GROUP BY)
+
+## 📊 Resumen de Lecciones Actuales
+
+| ID | Título | Tabla | Conceptos | Objetivos |
+|----|--------|-------|-----------|-----------|
+| 0 | Introducción a SQL | series | Conceptos básicos, visualizador interactivo | 0 (teoría) |
+| 1 | Consultas SELECT 101 | series | SELECT, columnas específicas, * | 5 |
+| 2 | Restricciones numéricas | series | WHERE, BETWEEN, NOT BETWEEN, LIMIT | 4 |
+| 3 | Restricciones de texto | series | LIKE, wildcards (%), IN, NOT IN | 4 |
+| 4 | Ordenamiento y filtrado | series | DISTINCT, ORDER BY, LIMIT, OFFSET | 4 |
+| 5 | Review SELECT simples | ciudades | Repaso completo, dataset nuevo | 5 |
 
