@@ -2,6 +2,9 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { lessons } from "@/lib/lessons";
+import { pythonLessons } from "@/lib/python-lessons";
+import { javascriptLessons } from "@/lib/javascript-lessons";
+import { cssLessons } from "@/lib/css-lessons";
 import { Database, Code2, Palette, Coffee, Zap, BookOpen, Target, Users, Globe } from "lucide-react";
 import { Navbar } from "@/components/navbar";
 
@@ -14,30 +17,34 @@ export default function Home() {
       status: "Disponible",
       lessons: lessons.length,
       description: "Bases de datos relacionales",
+      href: "/lesson/1",
     },
     {
       name: "Python",
       icon: Code2,
       color: "from-yellow-500 to-blue-500",
-      status: "Próximamente",
-      lessons: 0,
+      status: "Disponible",
+      lessons: pythonLessons.length,
       description: "Programación backend",
+      href: "/python/1",
     },
     {
       name: "JavaScript",
       icon: Coffee,
       color: "from-yellow-400 to-orange-500",
-      status: "Próximamente",
-      lessons: 0,
+      status: "Disponible",
+      lessons: javascriptLessons.length,
       description: "Desarrollo web moderno",
+      href: "/javascript/1",
     },
     {
       name: "CSS",
       icon: Palette,
       color: "from-pink-500 to-purple-500",
-      status: "Próximamente",
-      lessons: 0,
+      status: "Disponible",
+      lessons: cssLessons.length,
       description: "Diseño y estilos",
+      href: "/css/1",
     },
   ];
 
@@ -97,8 +104,8 @@ export default function Home() {
           {/* Stats */}
           <div className="grid grid-cols-3 gap-8 max-w-2xl mx-auto">
             <div className="text-center">
-              <div className="text-4xl font-bold text-blue-600">{lessons.length}+</div>
-              <div className="text-gray-600 mt-1">Lecciones SQL</div>
+              <div className="text-4xl font-bold text-blue-600">{lessons.length + pythonLessons.length + javascriptLessons.length + cssLessons.length}+</div>
+              <div className="text-gray-600 mt-1">Lecciones Totales</div>
             </div>
             <div className="text-center">
               <div className="text-4xl font-bold text-purple-600">4</div>
@@ -143,7 +150,7 @@ export default function Home() {
                     <>
                       <div className="text-3xl font-bold text-blue-600 mb-2">{tech.lessons}</div>
                       <div className="text-sm text-gray-600 mb-4">lecciones disponibles</div>
-                      <Link href="/lesson/1">
+                      <Link href={tech.href}>
                         <Button className="w-full">
                           Empezar ahora →
                         </Button>
