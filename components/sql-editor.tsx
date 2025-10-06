@@ -487,7 +487,7 @@ export default function SQLEditor({ lessonId, initialQuery, objectives, solution
                 </div>
               )}
               {(() => {
-                const displayResults = results?.rows.length > 0 ? results : lastValidResults;
+                const displayResults = (results?.rows && results.rows.length > 0) ? results : lastValidResults;
                 return displayResults ? (
                       <div className="rounded-md border overflow-hidden">
                         <div className="overflow-x-auto max-h-[300px] overflow-y-auto">
