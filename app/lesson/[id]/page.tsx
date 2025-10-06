@@ -271,6 +271,7 @@ export default async function LessonPage({ params }: { params: Promise<{ id: str
           {/* Editor interactivo - Ancho completo */}
           <div className="mb-8">
             <SQLEditor
+              lessonId={lessonId}
               initialQuery={lesson.initialQuery}
               objectives={lesson.objectives}
               solutions={lesson.solutions}

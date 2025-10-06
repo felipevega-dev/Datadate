@@ -12,7 +12,7 @@ Plataforma de aprendizaje interactivo de SQL en español, inspirada en sqlbolt.c
 
 ## 📦 Instalación
 
-1. Instala las dependencias:
+1. Instala las dependencias necesarias:
 ```bash
 npm install
 ```

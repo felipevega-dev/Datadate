@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { lessons } from "@/lib/lessons";
 import { Database, Code2, Palette, Coffee, Zap, BookOpen, Target, Users, Globe } from "lucide-react";
+import { Navbar } from "@/components/navbar";
 
 export default function Home() {
   const technologies = [
@@ -65,29 +66,7 @@ export default function Home() {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-slate-50 via-blue-50 to-white">
-      {/* Navbar */}
-      <nav className="border-b bg-white/80 backdrop-blur-lg sticky top-0 z-50 shadow-sm">
-        <div className="container mx-auto px-4 py-4">
-          <div className="flex items-center justify-between">
-            <Link href="/" className="flex items-center gap-3 group">
-              <div className="bg-gradient-to-br from-blue-600 to-purple-600 p-2 rounded-lg group-hover:scale-110 transition-transform">
-                <Database className="w-6 h-6 text-white" />
-              </div>
-              <div>
-                <h1 className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-                  CodeAcademy Español
-                </h1>
-                <p className="text-xs text-gray-500">Aprende a programar de forma interactiva</p>
-              </div>
-            </Link>
-            <div className="flex gap-4">
-              <Button variant="ghost">Lecciones</Button>
-              <Button variant="ghost">Progreso</Button>
-              <Button variant="outline">Iniciar Sesión</Button>
-            </div>
-          </div>
-        </div>
-      </nav>
+      <Navbar />
 
       {/* Hero Section */}
       <section className="container mx-auto px-4 py-20">

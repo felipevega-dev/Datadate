@@ -3,10 +3,13 @@
 import { useState, useEffect, useCallback } from "react";
 import Editor from "@monaco-editor/react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { CheckCircle2, Circle, PartyPopper } from "lucide-react";
+import { CheckCircle2, Circle, PartyPopper, Trophy } from "lucide-react";
 import SQLHintHelper from "./sql-hint-helper";
+import { useAuth } from "@/lib/auth-context";
+import { completLesson } from "@/lib/firestore";
 
 interface SQLEditorProps {
+  lessonId: number;
   initialQuery: string;
   objectives: string[];
   solutions?: string[];
@@ -15,7 +18,8 @@ interface SQLEditorProps {
   nextLessonTitle?: string;
 }
 
-export default function SQLEditor({ initialQuery, objectives, solutions, onProgressUpdate, nextLessonId, nextLessonTitle }: SQLEditorProps) {
+export default function SQLEditor({ lessonId, initialQuery, objectives, solutions, onProgressUpdate, nextLessonId, nextLessonTitle }: SQLEditorProps) {
+  const { user, userProgress, refreshUserProgress } = useAuth();
   const [query, setQuery] = useState(initialQuery);
   const [results, setResults] = useState<{ columns: string[]; rows: any[]; error?: string } | null>(null);
   const [completedObjectives, setCompletedObjectives] = useState<boolean[]>(
@@ -29,6 +33,11 @@ export default function SQLEditor({ initialQuery, objectives, solutions, onProgr
   const [showCelebration, setShowCelebration] = useState(false);
   const [lastValidResults, setLastValidResults] = useState<{ columns: string[]; rows: any[] } | null>(null);
   const [showingSolution, setShowingSolution] = useState(false);
+  const [xpEarned, setXpEarned] = useState<number | null>(null);
+  const [savingProgress, setSavingProgress] = useState(false);
+  
+  // Verificar si ya completó esta lección
+  const isAlreadyCompleted = userProgress?.completedLessons.includes(lessonId) || false;
 
   const executeQuery = useCallback(async (sqlQuery: string) => {
     if (!sqlQuery.trim()) {
@@ -373,6 +382,30 @@ export default function SQLEditor({ initialQuery, objectives, solutions, onProgr
       setAllCompleted(true);
       setShowCelebration(true);
       setTimeout(() => setShowCelebration(false), 5000);
+      
+      // Guardar progreso automáticamente si el usuario está autenticado
+      if (user && !isAlreadyCompleted) {
+        saveProgress();
+      }
+    }
+  };
+
+  // Guardar progreso en Firestore
+  const saveProgress = async () => {
+    if (!user || savingProgress || isAlreadyCompleted) return;
+    
+    setSavingProgress(true);
+    try {
+      const xp = await completLesson(user.uid, lessonId, objectives.length);
+      setXpEarned(xp);
+      await refreshUserProgress();
+      
+      // Mostrar notificación de XP
+      setTimeout(() => setXpEarned(null), 5000);
+    } catch (error) {
+      console.error('Error al guardar progreso:', error);
+    } finally {
+      setSavingProgress(false);
     }
   };
 
@@ -408,8 +441,25 @@ export default function SQLEditor({ initialQuery, objectives, solutions, onProgr
               <div>
                 <div className="text-3xl font-bold">¡Excelente trabajo!</div>
                 <div className="text-lg">Has completado todos los objetivos</div>
+                {xpEarned && user && (
+                  <div className="text-sm mt-2 flex items-center gap-2">
+                    <Trophy className="w-5 h-5" />
+                    <span>+{xpEarned} XP ganados</span>
+                  </div>
+                )}
               </div>
             </div>
+          </div>
+        </div>
+      )}
+      
+      {/* Notificación de lección ya completada */}
+      {isAlreadyCompleted && (
+        <div className="bg-blue-50 border-2 border-blue-200 rounded-lg p-4 flex items-center gap-3">
+          <Trophy className="w-6 h-6 text-blue-600" />
+          <div className="text-sm text-blue-900">
+            <span className="font-semibold">Ya completaste esta lección.</span>
+            {' '}Sigue practicando o avanza a la siguiente lección.
           </div>
         </div>
       )}

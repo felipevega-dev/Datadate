@@ -1,0 +1,57 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // Funciones helper
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+    
+    function isOwner(userId) {
+      return isAuthenticated() && request.auth.uid == userId;
+    }
+    
+    // Reglas para usuarios
+    match /users/{userId} {
+      // Permitir lectura pública del perfil (para leaderboard)
+      allow read: if true;
+      
+      // Solo el dueño puede crear/actualizar su perfil
+      allow create: if isOwner(userId) && 
+                       request.resource.data.userId == userId &&
+                       request.resource.data.email == request.auth.token.email;
+      
+      allow update: if isOwner(userId) &&
+                       request.resource.data.userId == userId &&
+                       // No permitir cambiar el email ni el userId
+                       request.resource.data.userId == resource.data.userId &&
+                       request.resource.data.email == resource.data.email;
+      
+      // No permitir eliminar perfiles
+      allow delete: if false;
+      
+      // Subcolección de completaciones
+      match /completions/{completionId} {
+        // Solo el dueño puede leer sus completaciones
+        allow read: if isOwner(userId);
+        
+        // Solo el dueño puede crear completaciones
+        allow create: if isOwner(userId) &&
+                         request.resource.data.lessonId is number &&
+                         request.resource.data.lessonId > 0 &&
+                         request.resource.data.xpEarned >= 0 &&
+                         request.resource.data.objectivesCompleted >= 0;
+        
+        // No permitir actualizar o eliminar completaciones
+        allow update, delete: if false;
+      }
+    }
+    
+    // Bloquear todo lo demás por defecto
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}
+
